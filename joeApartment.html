@@ -25,7 +25,6 @@
         <button onclick="checkWindow()">Check out Window</button>
     </div>
 
-    
     <div id="livingRoomButtons" class="living-room-buttons" style="display: none;">
         <!-- Living room buttons -->
         <button onclick="checkCouch()">Check out Couch</button>
@@ -36,10 +35,27 @@
         <button onclick="exitApartment()">Exit Apartment</button>
     </div>
 
+    <div id="kitchenButtons" style="display: none;">
+        <button onclick="grabWhiskey()">Grab a Whiskey</button>
+        <button onclick="grabWater()">Grab some Water</button>
+        <button onclick="grabCoffee()">Grab a Coffee</button>
+        <button onclick="makeBreakfast()">Make Breakfast</button>
+        <button onclick="haveBreakfastAndDrink('breakfast', 'whiskey')">Have Breakfast and Whiskey</button>
+    <button onclick="haveBreakfastAndDrink('breakfast', 'water')">Have Breakfast and Water</button>
+    </div>
+
+    <div id="restroomButtons" style="display: none;">
+        <button onclick="takeShower()">Take a Shower</button>
+        <button onclick="brushTeeth()">Brush Your Teeth</button>
+        <button onclick="lookMirror()">Look at Yourself in the Mirror</button>
+        <button onclick="takeDookie()">Take a Dookie</button>
+    </div>
+
     <div id="status">
         <p>Cash: <span id="cash"></span></p>
         <p>Health: <span id="health"></span></p>
         <p>Inventory: <span id="inventory"></span></p>
+        <p>Mood: <span id="mood"></span></p>
     </div>
 
     <button onclick="loadGameState()">Save Game</button>

@@ -31,6 +31,7 @@ function loadGameState() {
 var playerHealth = 100;
 var playerCash = 0;
 var inventory = [];
+var playerMood = "Sleepy";
 
 // Initial position of the player
 var gridSize = 10;
@@ -76,6 +77,54 @@ function checkWindow() {
     document.getElementById('description').innerHTML = '<h3>The same crap heap as always but hey, the sun sure does offer quite the pretty view none the less.</h3>';
 }
 
+// Function to take a shower
+function takeShower() {
+    // Update game state or perform necessary actions
+    alert("You take a refreshing shower.");
+}
+
+// Function to brush your teeth
+function brushTeeth() {
+    // Update game state or perform necessary actions
+    alert("You brush your teeth and feel fresh.");
+}
+
+// Function to look at yourself in the mirror
+function lookMirror() {
+    // Update game state or perform necessary actions
+    alert("You look at yourself in the mirror and admire your reflection.");
+}
+
+// Function to take a dookie
+function takeDookie() {
+    // Update game state or perform necessary actions
+    alert("You take a satisfying dookie.");
+}
+
+// Function to grab a whiskey
+function grabWhiskey() {
+    // Update game state or perform necessary actions
+    alert("You grab a bottle of whiskey.");
+}
+
+// Function to grab some water
+function grabWater() {
+    // Update game state or perform necessary actions
+    alert("You grab a glass of water.");
+}
+
+// Function to grab a coffee
+function grabCoffee() {
+    // Update game state or perform necessary actions
+    alert("You brew a fresh cup of coffee.");
+}
+
+// Function to make breakfast
+function makeBreakfast() {
+    // Update game state or perform necessary actions
+    alert("You prepare yourself a nice hearty breakfast.");
+}
+
 // Function to update status (cash, health, and inventory)
 function updateStatus() {
     // Update cash
@@ -84,30 +133,59 @@ function updateStatus() {
     document.getElementById('health').textContent = playerHealth;
     // Update inventory
     document.getElementById('inventory').textContent = inventory.join(', '); // Assuming inventory is an array of items
+    // Update mood
+    document.getElementById('mood').textContent = playerMood;
 }
 
 function updateButtons() {
     var livingRoomButtons = document.getElementById('livingRoomButtons');
     var bedWindowButtons = document.getElementById('bedWindowButtons');
+    var kitchenButtons = document.getElementById('kitchenButtons');
+    var restroomButtons = document.getElementById('restroomButtons');
 
     // Check if the player is in the living room
     if (playerPosition.x === 1 && playerPosition.y === 0) {
         livingRoomButtons.style.display = 'block'; // Show the living room buttons
-    } else {
-        livingRoomButtons.style.display = 'none'; // Hide the living room buttons
-    }
-
-    // Check if the player is in the bedroom
-    if (playerPosition.x === 0 && playerPosition.y === 0) {
-        bedWindowButtons.style.display = 'block'; // Show the bed and window buttons
-    } else {
         bedWindowButtons.style.display = 'none'; // Hide the bed and window buttons
+        kitchenButtons.style.display = 'none'; // Hide the kitchen buttons
+        restroomButtons.style.display = 'none'; // Hide the restroom buttons
+    } else if (playerPosition.x === 0 && playerPosition.y === 0) { // Check if the player is in the bedroom
+        livingRoomButtons.style.display = 'none'; // Hide the living room buttons
+        bedWindowButtons.style.display = 'block'; // Show the bed and window buttons
+        kitchenButtons.style.display = 'none'; // Hide the kitchen buttons
+        restroomButtons.style.display = 'none'; // Hide the restroom buttons
+    } else if (playerPosition.x === 1 && playerPosition.y === 1) { // Check if the player is in the kitchen
+        livingRoomButtons.style.display = 'none'; // Hide the living room buttons
+        bedWindowButtons.style.display = 'none'; // Hide the bed and window buttons
+        kitchenButtons.style.display = 'block'; // Show the kitchen buttons
+        restroomButtons.style.display = 'none'; // Hide the restroom buttons
+    } else if (playerPosition.x === 1 && playerPosition.y === -1) { // Check if the player is in the restroom
+        livingRoomButtons.style.display = 'none'; // Hide the living room buttons
+        bedWindowButtons.style.display = 'none'; // Hide the bed and window buttons
+        kitchenButtons.style.display = 'none'; // Hide the kitchen buttons
+        restroomButtons.style.display = 'block'; // Show the restroom buttons
     }
 }
 
 // Update status initially
 updateStatus();
 updateButtons();
+
+function refreshInRestroom() {
+    playerMood = "Awake";
+    updateStatus();
+}
+
+// Function to handle breakfast and drink
+function haveBreakfastAndDrink(food, drink) {
+    // Assume food and drink are strings representing what Joe eats and drinks
+    if (drink === "whiskey") {
+        playerMood = "Drunk";
+    } else {
+        playerMood = "Fluffy";
+    }
+    updateStatus();
+}
 
 // Define buttonsDiv and get reference to the element where you want to append buttons
 var buttonsDiv = document.getElementById('buttons');
