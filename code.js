@@ -2,14 +2,17 @@
 function saveGameState() {
     // Example game state object
     var gameState = {
-        level: 5,
-        score: 1500,
-        character: "Joe"
+        playerHealth: playerHealth,
+        playerCash: playerCash,
+        inventory: inventory,
+        playerMood: playerMood,
+        playerPosition: playerPosition // Assuming playerPosition is an object with x and y coordinates
     };
-    // Convert the object to JSON string
     var gameStateJSON = JSON.stringify(gameState);
+
     // Save the JSON string to local storage
     localStorage.setItem("gameState", gameStateJSON);
+
     alert("Game saved successfully!");
 }
 
@@ -17,11 +20,23 @@ function saveGameState() {
 function loadGameState() {
     // Retrieve the JSON string from local storage
     var gameStateJSON = localStorage.getItem("gameState");
+
     if (gameStateJSON) {
         // Convert JSON string back to object
         var gameState = JSON.parse(gameStateJSON);
-        // Example: Update UI with loaded game state
-        console.log("Loaded Game State:", gameState);
+
+        // Update game state variables
+        playerHealth = gameState.playerHealth;
+        playerCash = gameState.playerCash;
+        inventory = gameState.inventory;
+        playerMood = gameState.playerMood;
+        playerPosition = gameState.playerPosition;
+
+        // Update UI with loaded game state
+        updateStatus();
+        updateButtons();
+
+        alert("Game loaded successfully!");
     } else {
         alert("No saved game found!");
     }
@@ -40,32 +55,53 @@ var playerPosition = { x: 0, y: 0 }; // Assuming the apartment is represented as
 // Function to move the player
 // Function to move the player
 function move(direction) {
+    // Get the next position based on the direction
+    var nextX = playerPosition.x;
+    var nextY = playerPosition.y;
     switch (direction) {
         case 'left':
-            playerPosition.x--;
+            nextX--;
             break;
         case 'right':
-            playerPosition.x++;
+            nextX++;
             break;
         case 'up':
-            playerPosition.y--;
+            nextY--;
             break;
         case 'down':
-            playerPosition.y++;
+            nextY++;
             break;
         default:
             break;
     }
-    updateLocation();
-    updateButtons(); // Add this line to update buttons after each movement
+
+
+    // Check if the next position is valid
+    if (isValidPosition(nextX, nextY)) {
+        // Update the player's position
+        playerPosition.x = nextX;
+        playerPosition.y = nextY;
+        updateLocation();
+        updateButtons(); // Update buttons after each movement
+    } else {
+        alert("That's a wall Dummy!"); // Display a message if the movement is invalid
+    }
 }
 
-// Function to update the player's location
-function updateLocation() {
-    // Example: Update UI to reflect the new player position
-    alert("You moved to position (" + playerPosition.x + ", " + playerPosition.y + ")");
-}
+function isValidPosition(x, y) {
+    // Define the boundaries of Joe's Apartment
+    var minX = 0;
+    var maxX = 1;
+    var minY = -1;
+    var maxY = 1;
 
+    // Check if the position is within the boundaries
+    if (x >= minX && x <= maxX && y >= minY && y <= maxY) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 // Function to update description when checking out the bed
 function checkBed() {
@@ -172,8 +208,17 @@ updateStatus();
 updateButtons();
 
 function refreshInRestroom() {
+    if (playerMood === "Sleepy") {
+        playerHealth += 10; // Example: Resting in the restroom improves health when sleepy
+        // Ensure health stays within bounds (0 to 100)
+        playerHealth = Math.min(playerHealth, 100);
+    }
     playerMood = "Awake";
     updateStatus();
+
+    // Additional interactions for the Awake mood
+    alert("Now you're ready for the day, ain't you?");
+    updateButtons(); // Update buttons after the mood change
 }
 
 // Function to handle breakfast and drink
@@ -181,10 +226,19 @@ function haveBreakfastAndDrink(food, drink) {
     // Assume food and drink are strings representing what Joe eats and drinks
     if (drink === "whiskey") {
         playerMood = "Drunk";
+        // Adjust health based on mood
+        playerHealth -= 10; // Example: Drinking whiskey reduces health
     } else {
         playerMood = "Fluffy";
+        // Adjust health based on mood
+        playerHealth += 10; // Example: Having breakfast improves health
     }
+    // Ensure health stays within bounds (0 to 100)
+    playerHealth = Math.max(0, Math.min(playerHealth, 100));
+
+    // Update other parameters and UI
     updateStatus();
+    updateButtons(); // Update buttons after the mood change
 }
 
 // Define buttonsDiv and get reference to the element where you want to append buttons
