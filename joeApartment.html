@@ -41,8 +41,16 @@
         <button onclick="grabCoffee()">Grab a Coffee</button>
         <button onclick="makeBreakfast()">Make Breakfast</button>
         <button onclick="haveBreakfastAndDrink('breakfast', 'whiskey')">Have Breakfast and Whiskey</button>
-    <button onclick="haveBreakfastAndDrink('breakfast', 'water')">Have Breakfast and Water</button>
+        <button onclick="haveBreakfastAndDrink('breakfast', 'water')">Have Breakfast and Water</button>
+        <button id="acquireKitchenKnife" onclick="acquireWeapon('kitchenKnife')">Acquire Kitchen Knife</button>
+        <button id="acquireFryingPan" onclick="acquireWeapon('fryingPan')">Acquire Frying Pan</button>
     </div>
+
+    <div id="hallwayButtons" style="display: none;">
+        <button onclick="exitApartmentBuilding()">Exit Apartment Building</button>
+    </div>
+
+    <div id="weapons"></div>
 
     <div id="restroomButtons" style="display: none;">
         <button onclick="takeShower()">Take a Shower</button>
@@ -56,9 +64,20 @@
         <p>Health: <span id="health"></span></p>
         <p>Inventory: <span id="inventory"></span></p>
         <p>Mood: <span id="mood"></span></p>
+        <p>Position: X=<span id="positionX"></span>, Y=<span id="positionY"></span></p>
     </div>
 
-    <button onclick="loadGameState()">Save Game</button>
+    <div id="newspaperArticle" style="display: none;">
+        <!-- Add your newspaper article image here -->
+        <img src="newspaper_article.jpg" alt="Newspaper Article">
+    </div>
+
+    <div id="saveLoad">
+        <!-- Buttons for managing saved games -->
+        <button onclick="saveGameState()">Save Game</button>
+        <button onclick="loadGamePrompt()">Load Game</button>
+        <button onclick="deleteGamePrompt()">Delete Game</button>
+    </div>
 </body>
 
 </html>
