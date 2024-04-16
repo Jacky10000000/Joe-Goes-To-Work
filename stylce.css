@@ -1,0 +1,42 @@
+.title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.health {
+    display: flex;
+    flex-direction: column;
+}
+
+.move_btn {
+    display: flex;
+    text-align: center;
+    background-color: cyan;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 15px;
+    /* transition: 5s ease; */
+    cursor: pointer;
+}
+
+/* 
+.move_btn:hover {
+    box-shadow: 0px 0px 20px 20px rgba(0, 0, blue, alpha);
+} */
+
+.move_btn div {
+    height: 40px;
+    width: 40px;
+    border-top: 8px solid black;
+    border-left: 8px solid black;
+    transform: rotate(45deg);
+    margin-left: 27.5px;
+    margin-top: 35px;
+}
+
+.left {
+    transform: rotate(-90deg);
+}

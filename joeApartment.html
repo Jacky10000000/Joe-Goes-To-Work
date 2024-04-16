@@ -5,20 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Joe Goes To Work</title>
+    <link rel="stylesheet" href="stylce.css">
     <script src="code.js"></script>
 </head>
 
 <body>
-    <h2>Another Day, Another Dollar</h2>
-    <div id="description">
-        <h3>There's Your bed Nice and tended to as always</h3>
-    </div>
+    <section class="title">
+        <h2>Another Day, Another Dollar</h2>
+        <div id="description">
+            <h3>There's Your bed Nice and tended to as always</h3>
+        </div>
+        <h3>The Window sure looks pretty</h3>
+    </section>
 
-    <h3>The Window sure looks pretty</h3>
-    <button onclick="move('left')">Go Left</button>
-    <button onclick="move('right')">Go Right</button>
-    <button onclick="move('up')">Go Up</button>
-    <button onclick="move('down')">Go Down</button>
+    <section class="arrow_keys">
+        <div onclick="move('left')" class="move_btn left"><div></div></div>
+        <button onclick="move('right')">Go Right</button>
+        <button onclick="move('up')">Go Up</button>
+        <button onclick="move('down')">Go Down</button>
+    </section>
 
     <div id="bedWindowButtons">
         <button onclick="checkBed()">Check out Bed</button>
@@ -59,13 +64,15 @@
         <button onclick="takeDookie()">Take a Dookie</button>
     </div>
 
-    <div id="status">
-        <p>Cash: <span id="cash"></span></p>
-        <p>Health: <span id="health"></span></p>
-        <p>Inventory: <span id="inventory"></span></p>
-        <p>Mood: <span id="mood"></span></p>
-        <p>Position: X=<span id="positionX"></span>, Y=<span id="positionY"></span></p>
-    </div>
+    <section class="health">
+        <div id="status">
+            <p>Cash: <span id="cash"></span></p>
+            <p>Health: <span id="health"></span></p>
+            <p>Inventory: <span id="inventory"></span></p>
+            <p>Mood: <span id="mood"></span></p>
+            <p>Position: X=<span id="positionX"></span>, Y=<span id="positionY"></span></p>
+        </div>
+    </section>
 
     <div id="newspaperArticle" style="display: none;">
         <!-- Add your newspaper article image here -->
