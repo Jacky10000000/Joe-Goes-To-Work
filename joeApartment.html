@@ -18,10 +18,12 @@
         <h3>The Window sure looks pretty</h3>
     </section>
 
-    <button onclick="move('left')">Go Left</button>
-    <button onclick="move('right')">Go Right</button>
-    <button onclick="move('up')">Go Up</button>
-    <button onclick="move('down')">Go Down</button>
+    <section class="arrow_keys">
+        <div onclick="move('left')" class="move_btn left"><div></div></div>
+        <button onclick="move('right')">Go Right</button>
+        <button onclick="move('up')">Go Up</button>
+        <button onclick="move('down')">Go Down</button>
+    </section>
 
     <div id="bedWindowButtons">
         <button onclick="checkBed()">Check out Bed</button>
