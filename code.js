@@ -86,6 +86,7 @@ function loadGamePrompt() {
     }
 }
 
+
 // Initial position of the player
 var gridSize = 10;
 var playerPosition = { x: 0, y: 0 }; // Assuming the apartment is represented as a grid
@@ -413,6 +414,24 @@ function updateButtons() {
         livingRoomButtons.style.display = 'none';
     }
 }
+
+
+function generateMap(gridSize, playerPosition) {
+    var mapContainer = document.getElementById('mapContainer');
+    mapContainer.innerHTML = ''; // Clear existing map
+
+    // Loop through each row and column to generate map cells
+    for (var y = 0; y < gridSize; y++) {
+        for (var x = 0; x < gridSize; x++) {
+            var cell = document.createElement('div');
+            cell.classList.add('item'); // Apply the CSS class for map cells
+            cell.textContent = x === playerPosition.x && y === playerPosition.y ? 'P' : ''; // Add player marker if it's the player's position
+            mapContainer.appendChild(cell);
+        }
+    }
+}
+
+generateMap(gridSize, player.position);
 
 updateStatus();
 updateButtons();
