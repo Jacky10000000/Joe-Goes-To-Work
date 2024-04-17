@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Joe Goes To Work</title>
-    <link rel="stylesheet" href="stylce.css">
+    <link rel="stylesheet" href="style.css">
     <script src="code.js"></script>
 </head>
 
@@ -16,13 +16,6 @@
             <h3>There's Your bed Nice and tended to as always</h3>
         </div>
         <h3>The Window sure looks pretty</h3>
-    </section>
-
-    <section class="arrow_keys">
-        <div onclick="move('left')" class="move_btn left"><div></div></div>
-        <button onclick="move('right')">Go Right</button>
-        <button onclick="move('up')">Go Up</button>
-        <button onclick="move('down')">Go Down</button>
     </section>
 
     <div id="bedWindowButtons">
@@ -64,16 +57,6 @@
         <button onclick="takeDookie()">Take a Dookie</button>
     </div>
 
-    <section class="health">
-        <div id="status">
-            <p>Cash: <span id="cash"></span></p>
-            <p>Health: <span id="health"></span></p>
-            <p>Inventory: <span id="inventory"></span></p>
-            <p>Mood: <span id="mood"></span></p>
-            <p>Position: X=<span id="positionX"></span>, Y=<span id="positionY"></span></p>
-        </div>
-    </section>
-
     <div id="newspaperArticle" style="display: none;">
         <!-- Add your newspaper article image here -->
         <img src="newspaper_article.jpg" alt="Newspaper Article">
@@ -85,6 +68,35 @@
         <button onclick="loadGamePrompt()">Load Game</button>
         <button onclick="deleteGamePrompt()">Delete Game</button>
     </div>
+
+        <section class="health">
+            <div id="status">
+                <p>Cash: <span id="cash"></span></p>
+                <p>Health: <span id="health"></span></p>
+                <p>Inventory: <span id="inventory"></span></p>
+                <p>Mood: <span id="mood"></span></p>
+                <p>Position: X=<span id="positionX"></span>, Y=<span id="positionY"></span></p>
+            </div>
+        </section>
+
+        <section class="btn_center">
+            <section class="arrow_keys">
+                <div onclick="move('up')" class="move_btn up">
+                    <div></div>
+                </div>
+                <section class="button_org">
+                    <div onclick="move('left')" class="move_btn left">
+                        <div></div>
+                    </div>
+                    <div onclick="move('right')" class="move_btn right">
+                        <div></div>
+                    </div>
+                </section>
+                <div onclick="move('down')" class="move_btn down">
+                    <div></div>
+                </div>
+            </section>
+    </section>
 </body>
 
 </html>
