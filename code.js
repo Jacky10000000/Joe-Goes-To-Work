@@ -2,10 +2,16 @@
 var player = {
     health: 100,
     cash: 25,
-    inventory: [],
     mood: "Sleepy",
     position: { x: 0, y: 0 },
-    equippedWeapon: null // New property to store the equipped weapon
+    equippedWeapon: null,
+    inventory: {
+        weapons: [],
+        food: [],
+        newspapers: [],
+        keys: [],
+        miscellaneous: []
+    }
 };
 
 // Weapons with initial states
@@ -18,17 +24,131 @@ var weapons = {
     knuckleDusters: { obtained: false }
 };
 
+var weapons = {
+    "Snub-Nose Revolver": {
+        description: "A small, concealable revolver with a short barrel.",
+        weight: 1.5 // Example weight in kilograms
+    },
+    "Knuckle Dusters": {
+        description: "Brass knuckles for close combat encounters.",
+        weight: 0.5
+    },
+    "Kitchen Knife": {
+        description: "A sharp knife commonly found in kitchens.",
+        weight: 0.8
+    },
+    // Add more weapons with their descriptions and weights
+};
+
+// Function to add an item to the inventory
+function addItemToInventory(item, category) {
+    if (category === "weapons" && weapons[item]) {
+        // Add the weapon object instead of just the name
+        player.inventory[category].push(weapons[item]);
+    } else {
+        // Add other types of items as before
+        player.inventory[category].push(item);
+    }
+    updateStatus();
+}
+
+
+function removeItemFromInventory(item, category) {
+    const index = player.inventory[category].indexOf(item);
+    if (index !== -1) {
+        player.inventory[category].splice(index, 1);
+        updateStatus();
+    }
+}
+
+function useItemFromInventory(item, category) {
+    // Implement logic to use the item
+    if (category === "weapons") {
+        // Implement logic to use the weapon
+        // For example, equip it or use it in combat
+        alert("You use the " + item + ".");
+    } else {
+        // Implement logic for using other types of items
+    }
+    removeItemFromInventory(item, category);
+}
+
+
 // Function to update status display
 function updateStatus() {
     document.getElementById('cash').textContent = player.cash;
     document.getElementById('health').textContent = player.health;
-    document.getElementById('inventory').textContent = player.inventory.join(', ');
+    // Display inventory properly
+    var inventoryDisplay = document.getElementById('inventory');
+    inventoryDisplay.innerHTML = ''; // Clear previous content
+    for (var category in player.inventory) {
+        if (player.inventory.hasOwnProperty(category) && player.inventory[category].length > 0) {
+            var categoryHeader = document.createElement('p');
+            categoryHeader.textContent = category.toUpperCase() + ':';
+            inventoryDisplay.appendChild(categoryHeader);
+            var itemList = document.createElement('ul');
+            player.inventory[category].forEach(item => {
+                var listItem = document.createElement('li');
+                if (category === "weapons") {
+                    // Display weapon name and description
+                    listItem.textContent = item.name + " - " + item.description;
+                } else {
+                    // Display other types of items as before
+                    listItem.textContent = item;
+                }
+                itemList.appendChild(listItem);
+            });
+            inventoryDisplay.appendChild(itemList);
+        }
+    }
     document.getElementById('mood').textContent = player.mood;
     document.getElementById('positionX').textContent = player.position.x;
     document.getElementById('positionY').textContent = player.position.y;
 }
 
-// Function to save game state
+// Implement functions to interact with weapons
+function acquireWeapon(weaponName) {
+    // Add the weapon to the player's inventory
+    addItemToInventory(weaponName, "weapons");
+}
+
+function useWeapon(weaponName) {
+    // Implement logic to use the weapon
+    alert("You use the " + weaponName + ".");
+}
+
+document.getElementById('addItemButton').addEventListener('click', function () {
+    var newItem = prompt("Enter the name of the item:");
+    var category = prompt("Enter the category of the item:");
+    addItemToInventory(newItem, category);
+});
+
+document.getElementById('removeItemButton').addEventListener('click', function () {
+    var itemToRemove = prompt("Enter the name of the item to remove:");
+    var category = prompt("Enter the category of the item:");
+    removeItemFromInventory(itemToRemove, category);
+});
+
+document.getElementById('useItemButton').addEventListener('click', function () {
+    var itemToUse = prompt("Enter the name of the item to use:");
+    var category = prompt("Enter the category of the item:");
+    useItemFromInventory(itemToUse, category);
+});
+
+// Show/hide inventory popup
+function showInventory() {
+    var inventoryPopup = document.getElementById('inventoryPopup');
+    inventoryPopup.style.display = inventoryPopup.style.display === 'block' ? 'none' : 'block';
+}
+
+// Add event listener to close inventory popup when clicking outside of it
+document.addEventListener('click', function (event) {
+    var inventoryPopup = document.getElementById('inventoryPopup');
+    if (!inventoryPopup.contains(event.target)) {
+        inventoryPopup.style.display = 'none';
+    }
+});
+// Function to save game state including inventory
 function saveGameState() {
     var slot = prompt("Enter a slot number (1-10) to save your game:");
     if (slot !== null) {
@@ -38,7 +158,7 @@ function saveGameState() {
             if (savedGame && !confirm("Slot " + slot + " already contains a saved game. Do you want to overwrite it?")) {
                 return;
             }
-            localStorage.setItem("saveSlot_" + slot, JSON.stringify(player));
+            localStorage.setItem("saveSlot_" + slot, JSON.stringify({ player: player, inventory: player.inventory }));
             alert("Game saved successfully in slot " + slot);
         } else {
             alert("Invalid slot number. Please enter a number between 1 and 10.");
@@ -46,11 +166,14 @@ function saveGameState() {
     }
 }
 
+// Function to load game state including inventory
 function loadGameState(slot) {
     var savedGame = localStorage.getItem("saveSlot_" + slot);
     if (savedGame) {
         if (confirm("Do you want to load the game from slot " + slot + "?")) {
-            player = JSON.parse(savedGame);
+            var savedData = JSON.parse(savedGame);
+            player = savedData.player;
+            player.inventory = savedData.inventory;
             updateStatus();
             alert("Game loaded successfully!");
             return true;
@@ -86,6 +209,10 @@ function loadGamePrompt() {
     }
 }
 
+function updatePlayerPosition() {
+    updatePositionDisplay();
+    updatePlayerIconPosition();
+}
 
 // Initial position of the player
 var gridSize = 10;
@@ -117,12 +244,22 @@ function move(direction) {
     if (isValidPosition(nextX, nextY)) {
         player.position.x = nextX;
         player.position.y = nextY;
-        updatePositionDisplay();
-        updateButtonsBasedOnPosition(); // Update buttons based on the new position
+        updatePlayerPosition();
+        updateButtonsBasedOnPosition();
     } else {
-        alert("That's a wall!");
+        alert("You cannot move there.");
     }
 }
+
+document.addEventListener('click', function(event) {
+    if (event.target.matches('#livingRoomButtons button')) {
+        var buttonAction = event.target.getAttribute('data-action');
+        if (buttonAction) {
+            window[buttonAction]();
+        }
+    }
+});
+
 // Function to check if position is valid
 function isValidPosition(x, y) {
     // Define boundaries for the apartment building hallway and Joe's apartment
@@ -154,10 +291,18 @@ function isValidPosition(x, y) {
     return false;
 }
 
+
+
+// Function to check if a cell is within a given area
+function isCellInArea(cell, area) {
+    return area.some(areaCell => areaCell.x === cell.x && areaCell.y === cell.y);
+}
+
 // Function to update position display
 function updatePositionDisplay() {
     document.getElementById('positionX').textContent = player.position.x;
     document.getElementById('positionY').textContent = player.position.y;
+    updatePlayerIconPosition();
 }
 
 // Function to handle interactions in the restroom
@@ -415,6 +560,26 @@ function updateButtons() {
     }
 }
 
+var customMapAreas = {
+    "apartment": [
+        { x: 0, y: 0 },
+        { x: 0, y: 1 },
+        { x: 1, y: 0 },
+        { x: 1, y: 1 }
+    ],
+    "hallway": [
+        { x: 2, y: 0 },
+        { x: 3, y: 0 }
+    ],
+    "kitchen": [
+        { x: 1, y: 1 }
+    ],
+    "restroom": [
+        { x: 1, y: -1 }
+    ],
+    // Define additional areas as needed
+};
+
 
 function generateMap(gridSize, playerPosition) {
     var mapContainer = document.getElementById('mapContainer');
@@ -425,15 +590,56 @@ function generateMap(gridSize, playerPosition) {
         for (var x = 0; x < gridSize; x++) {
             var cell = document.createElement('div');
             cell.classList.add('item'); // Apply the CSS class for map cells
-            cell.textContent = x === playerPosition.x && y === playerPosition.y ? 'P' : ''; // Add player marker if it's the player's position
+
+            // Check if the cell belongs to any custom map area
+            for (var area in customMapAreas) {
+                if (isCellInArea({ x, y }, customMapAreas[area])) {
+                    cell.classList.add(area); // Apply the corresponding area class
+                }
+            }
+
+            // Add player marker if it's the player's position
+            if (x === playerPosition.x && y === playerPosition.y) {
+                cell.classList.add('player');
+            }
+
             mapContainer.appendChild(cell);
         }
     }
 }
 
-generateMap(gridSize, player.position);
+// Function to check if a cell is within a given area
+function isCellInArea(cell, area) {
+    return area.some(areaCell => areaCell.x === cell.x && areaCell.y === cell.y);
+}
 
+
+function updatePlayerIconPosition() {
+    var playerIcon = document.getElementById('playerIcon');
+    var cellSize = 50; // Size of each cell in pixels
+
+    // Get the map container and its position relative to the viewport
+    var mapContainer = document.getElementById('mapContainer');
+    var mapRect = mapContainer.getBoundingClientRect();
+
+    // Calculate the position of the player icon within the map, considering the map offset
+    var posX = player.position.x * cellSize + mapRect.left + (cellSize - playerIcon.offsetWidth) / 2;
+    var posY = player.position.y * cellSize + mapRect.top + (cellSize - playerIcon.offsetHeight) / 2;
+
+    console.log("Player Position X:", player.position.x);
+    console.log("Player Position Y:", player.position.y);
+    console.log("Player Icon Position X:", posX);
+    console.log("Player Icon Position Y:", posY);
+
+    // Update the position of the player icon
+    playerIcon.style.left = posX + 'px';
+    playerIcon.style.top = posY + 'px';
+}
+
+
+updatePlayerIconPosition();
 updateStatus();
 updateButtons();
 updatePositionDisplay();
+generateMap(gridSize, player.position);
 
