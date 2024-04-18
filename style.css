@@ -12,6 +12,7 @@
 .health {
     display: flex;
     flex-direction: column;
+    width: 30%;
 }
 
 #status {
@@ -24,11 +25,22 @@
     flex-direction: row;
 } */
 
+.view_inventory {
+    display: flex;
+    background-color: cyan;
+    width: 10%;
+    height: 4vh;
+}
+
 
 .btn_center {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
+}
+
+.mapper {
+    width: 30%;
 }
 
 .arrow_keys {
@@ -36,6 +48,7 @@
     flex-direction: column;
     align-items: center;
     position: relative;
+    width: 30%;
 }
 
 .move_btn {
