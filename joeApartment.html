@@ -69,50 +69,53 @@
         <button onclick="deleteGamePrompt()">Delete Game</button>
     </div>
 
+    <div id="inventoryPopup">
+        <div class="popup-content">
+            <!-- Inventory content goes here -->
+            <button onclick="showInventory()">Close</button>
+        </div>
+    </div>
+
+    <section class="btn_center">
+
         <section class="health">
             <div id="status">
                 <p>Cash: <span id="cash"></span></p>
                 <p>Health: <span id="health"></span></p>
                 <p>Inventory: <span id="inventory"></span></p>
-                <button onclick="showInventory()">View Inventory</button>
+                <div class="view_inventory" onclick="showInventory()">View Inventory</div>
                 <p>Mood: <span id="mood"></span></p>
                 <p>Position: X=<span id="positionX"></span>, Y=<span id="positionY"></span></p>
             </div>
         </section>
 
-        <div id="inventoryPopup">
-            <div class="popup-content">
-                <!-- Inventory content goes here -->
-                <button onclick="showInventory()">Close</button>
+        <section class="mapper">
+            <div id="mapContainer" class="map">
+                <!-- Add buildings with the "building" class -->
+                <div class="item building"></div>
+                <div class="item"></div>
+                <!-- Add more building cells as needed -->
+                <!-- Include player icon -->
+                <div id="playerIcon" class="player"></div>
             </div>
-        </div>
+        </section>
 
-        <div id="mapContainer" class="map">
-            <!-- Add buildings with the "building" class -->
-            <div class="item building"></div>
-            <div class="item"></div>
-            <!-- Add more building cells as needed -->
-            <!-- Include player icon -->
-            <div id="playerIcon" class="player"></div>
-        </div>
-
-        <section class="btn_center">
-            <section class="arrow_keys">
-                <div onclick="move('up')" class="move_btn up">
+        <section class="arrow_keys">
+            <div onclick="move('up')" class="move_btn up">
+                <div></div>
+            </div>
+            <section class="button_org">
+                <div onclick="move('left')" class="move_btn left">
                     <div></div>
                 </div>
-                <section class="button_org">
-                    <div onclick="move('left')" class="move_btn left">
-                        <div></div>
-                    </div>
-                    <div onclick="move('right')" class="move_btn right">
-                        <div></div>
-                    </div>
-                </section>
-                <div onclick="move('down')" class="move_btn down">
+                <div onclick="move('right')" class="move_btn right">
                     <div></div>
                 </div>
             </section>
+            <div onclick="move('down')" class="move_btn down">
+                <div></div>
+            </div>
+        </section>
     </section>
 </body>
 
