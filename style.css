@@ -1,6 +1,6 @@
-/* body {
-    margin: 0%;
-} */
+body {
+    background-color: #151035;
+}
 
 .title {
     display: flex;
@@ -9,15 +9,27 @@
     text-align: center;
 }
 
+h2 {
+    color: white;
+}
+
+h3 {
+    color: white;
+}
+
+p {
+    color: white;
+}
+
 .health {
     display: flex;
     flex-direction: column;
-    width: 30%;
 }
 
 #status {
     display: flex;
     flex-direction: column;
+    border: 5.5px solid #FFD37E;
 }
 
 /* .bar {
@@ -27,40 +39,37 @@
 
 .view_inventory {
     display: flex;
+    align-items: center;
     background-color: cyan;
-    width: 10%;
+    border: 5px solid black;
+    max-width: 120px;
     height: 4vh;
+    cursor: pointer;
 }
 
 
 .btn_center {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
 }
 
-.mapper {
-    width: 30%;
-}
 
 .arrow_keys {
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
-    width: 30%;
 }
 
 .move_btn {
     display: flex;
-    background-color: cyan;
+    background-color: none;
     width: 100px;
-    max-width: 50%;
     height: 100px;
-    max-height: 50%;
     /* transition: 5s ease; */
     cursor: pointer;
-    border: 10px solid black;
+    border: 5.5px solid #FFD37E;
 }
 
 /* 
@@ -72,11 +81,11 @@
     position: absolute;
     height: 40px;
     width: 40px;
-    border-top: 8px solid black;
-    border-left: 8px solid black;
+    border-top: 8px solid white;
+    border-left: 8px solid white;
     transform: rotate(45deg);
     margin-left: 27.5px;
-    margin-top: 35px;
+    margin-top: 20px;
 }
 
 .button_org {
@@ -102,22 +111,411 @@
     margin-top: 1vh;
 }
 
-.map {
+#mapContainer {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(10, 50px);
     grid-template-rows: repeat(10, 50px);
-    gap: 2px;
     border: 1px solid black;
 }
 
+.item-1 {
+    background-color: lightgray;
+}
 
-.map .item {
-    width: 50px;
-    height: 50px;
-    border: 1px solid black; /* Add border to show grid lines */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.item-2 {
+    background-color: lightgray;
+}
+
+.item-3 {
+    background-color: lightgray;
+}
+
+.item-4 {
+    background-color: lightgray;
+}
+
+.item-5 {
+    background-color: lightgray;
+}
+
+.item-6 {
+    background-color: lightgray;
+}
+
+.item-7 {
+    background-color: lightgray;
+}
+
+.item-8 {
+    background-color: lightgray;
+}
+
+.item-9 {
+    background-color: lightgray;
+}
+
+.item-10 {
+    background-color: lightgray;
+}
+ 
+.item-11 {
+    background-color: lightgray;
+}
+
+.item-12 {
+    background-color: lightgray;
+}
+
+.item-13 {
+    background-color: lightgray;
+}
+
+.item-14 {
+    background-color: lightgray;
+}
+
+.item-15 {
+    background-color: lightgray;
+}
+
+.item-16 {
+    background-color: lightgray;
+}
+
+.item-17 {
+    background-color: lightgray;
+}
+
+.item-18 {
+    background-color: lightgray;
+}
+
+.item-19 {
+    background-color: lightgray;
+}
+
+.item-20 {
+    background-color: lightgray;
+}
+
+.item-21 {
+    background-color: lightgray;
+}
+
+.item-22 {
+    background-color: lightgray;
+}
+
+.item-23 {
+    background-color: lightgray;
+}
+
+.item-24 {
+    background-color: lightgray;
+}
+
+.item-25 {
+    background-color: lightgray;
+}
+
+.item-26 {
+    background-color: lightgray;
+}
+
+.item-27 {
+    background-color: lightgray;
+}
+
+.item-28 {
+    background-color: lightgray;
+}
+
+.item-29 {
+    background-color: lightgray;
+}
+
+.item-30 {
+    background-color: lightgray;
+}
+
+.item-31 {
+    background-color: lightgray;
+}
+
+.item-32 {
+    background-color: lightgray;
+}
+
+.item-33 {
+    background-color: lightgray;
+}
+
+.item-34 {
+    background-color: lightgray;
+}
+
+.item-35 {
+    background-color: lightgray;
+}
+
+.item-36 {
+    background-color: lightgray;
+}
+
+.item-37 {
+    background-color: lightgray;
+}
+
+.item-38 {
+    background-color: lightgray;
+}
+
+.item-39 {
+    background-color: lightgray;
+}
+
+.item-40 {
+    background-color: lightgray;
+}
+
+.item-41 {
+    background-color: lightgray;
+}
+
+.item-42 {
+    background-color: lightgray;
+}
+
+.item-43 {
+    background-color: lightgray;
+}
+
+.item-44 {
+    background-color: lightgray;
+}
+
+.item-45 {
+    background-color: lightgray;
+}
+
+.item-46 {
+    background-color: lightgray;
+}
+
+.item-47 {
+    background-color: lightgray;
+}
+
+.item-48 {
+    background-color: lightgray;
+}
+
+.item-49 {
+    background-color: lightgray;
+}
+
+.item-50 {
+    background-color: lightgray;
+}
+
+.item-51 {
+    background-color: lightgray;
+}
+
+.item-52 {
+    background-color: lightgray;
+}
+
+.item-53 {
+    background-color: lightgray;
+}
+
+.item-54 {
+    background-color: lightgray;
+}
+
+.item-55 {
+    background-color: lightgray;
+}
+
+.item-56 {
+    background-color: lightgray;
+}
+
+.item-57 {
+    background-color: lightgray;
+}
+
+.item-58 {
+    background-color: lightgray;
+}
+
+.item-59 {
+    background-color: lightgray;
+}
+
+.item-60 {
+    background-color: lightgray;
+}
+
+.item-61 {
+    background-color: lightgray;
+}
+
+.item-62 {
+    background-color: lightgray;
+}
+
+.item-63 {
+    background-color: lightgray;
+}
+
+.item-64 {
+    background-color: lightgray;
+}
+
+.item-65 {
+    background-color: lightgray;
+}
+
+.item-66 {
+    background-color: lightgray;
+}
+
+.item-67 {
+    background-color: lightgray;
+}
+
+.item-68 {
+    background-color: lightgray;
+}
+
+.item-69 {
+    background-color: lightgray;
+}
+
+.item-70 {
+    background-color: lightgray;
+}
+
+.item-71 {
+    background-color: lightgray;
+}
+
+.item-72 {
+    background-color: lightgray;
+}
+
+.item-73 {
+    background-color: lightgray;
+}
+
+.item-74 {
+    background-color: lightgray;
+}
+
+.item-75 {
+    background-color: lightgray;
+}
+
+.item-76 {
+    background-color: lightgray;
+}
+
+.item-77 {
+    background-color: lightgray;
+}
+
+.item-78 {
+    background-color: lightgray;
+}
+
+.item-79 {
+    background-color: lightgray;
+}
+
+.item-80 {
+    background-color: lightgray;
+}
+
+.item-81 {
+    background-color: lightgray;
+}
+
+.item-82 {
+    background-color: lightgray;
+}
+
+.item-83 {
+    background-color: lightgray;
+}
+
+.item-84 {
+    background-color: lightgray;
+}
+
+.item-85 {
+    background-color: lightgray;
+}
+
+.item-86 {
+    background-color: lightgray;
+}
+
+.item-87 {
+    background-color: lightgray;
+}
+
+.item-88 {
+    background-color: lightgray;
+}
+
+.item-89 {
+    background-color: lightgray;
+}
+
+.item-90 {
+    background-color: lightgray;
+}
+
+.item-91 {
+    background-color: lightgray;
+}
+
+.item-92 {
+    background-color: lightgray;
+}
+
+.item-93 {
+    background-color: lightgray;
+}
+
+.item-94 {
+    background-color: lightgray;
+}
+
+.item-95 {
+    background-color: lightgray;
+}
+
+.item-96 {
+    background-color: lightgray;
+}
+
+.item-97 {
+    background-color: lightgray;
+}
+
+.item-98 {
+    background-color: lightgray;
+}
+
+.item-99 {
+    background-color: lightgray;
+}
+
+.item-100 {
     background-color: lightgray;
 }
 
@@ -148,17 +546,6 @@
 
 .item.restroom {
     background-color: lightgreen; /* Example color for restroom cells */
-}
-
-#mapContainer {
-    position: relative;
-    width: 520px; /* Adjusted width to accommodate border thickness */
-    height: 520px; /* Adjusted height to accommodate border thickness */
-    display: grid;
-    grid-template-columns: repeat(10, 50px);
-    grid-template-rows: repeat(10, 50px);
-    gap: 2px;
-    border: 1px solid black;
 }
 
 #inventoryPopup {
