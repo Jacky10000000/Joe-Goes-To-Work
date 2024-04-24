@@ -16,28 +16,28 @@ var player = {
 
 // Weapons with initial states
 var weapons = {
-    kitchenKnife: { obtained: false },
-    fryingPan: { obtained: false },
-    chairLeg: { obtained: false },
-    snubNose: { obtained: false, hidden: true },
-    tacticalBaton: { obtained: false, hidden: true },
-    knuckleDusters: { obtained: false }
-};
-
-var weapons = {
     "Snub-Nose Revolver": {
         description: "A small, concealable revolver with a short barrel.",
-        weight: 1.5 // Example weight in kilograms
+        weight: 1.5,
+        obtained: false,
+        hidden: true
     },
     "Knuckle Dusters": {
         description: "Brass knuckles for close combat encounters.",
-        weight: 0.5
+        weight: 0.5,
+        obtained: false
     },
     "Kitchen Knife": {
         description: "A sharp knife commonly found in kitchens.",
-        weight: 0.8
+        weight: 0.8,
+        obtained: false
     },
-    // Add more weapons with their descriptions and weights
+    "Frying Pan": {
+        description: "A versatile kitchen tool, also handy for self-defense.",
+        weight: 2,
+        obtained: false
+    },
+    // Add more weapons here
 };
 
 // Function to add an item to the inventory
@@ -106,15 +106,19 @@ function updateStatus() {
     document.getElementById('positionY').textContent = player.position.y;
 }
 
-// Implement functions to interact with weapons
-function acquireWeapon(weaponName) {
-    // Add the weapon to the player's inventory
-    addItemToInventory(weaponName, "weapons");
-}
-
-function useWeapon(weaponName) {
-    // Implement logic to use the weapon
-    alert("You use the " + weaponName + ".");
+function handleWeaponAction(weaponName, action) {
+    if (weapons[weaponName]) {
+        if (action === "acquire") {
+            weapons[weaponName].obtained = true;
+            alert("You acquired the " + weaponName + ".");
+        } else if (action === "use") {
+            alert("You use the " + weaponName + ".");
+            // Implement logic for using the weapon
+        }
+        updateStatus();
+    } else {
+        alert("Weapon not found.");
+    }
 }
 
 document.getElementById('addItemButton').addEventListener('click', function () {
@@ -210,8 +214,10 @@ function loadGamePrompt() {
 }
 
 function updatePlayerPosition() {
-    updatePositionDisplay();
-    updatePlayerIconPosition();
+    // Update the display of the player's position
+    document.getElementById('positionX').textContent = player.position.x;
+    document.getElementById('positionY').textContent = player.position.y;
+    updatePlayerIconPosition(); // Update the player's icon position
 }
 
 // Initial position of the player
@@ -241,11 +247,13 @@ function move(direction) {
             break;
     }
 
+    // Check if the next position is within the map boundaries
     if (isValidPosition(nextX, nextY)) {
+        // Update the player's position
         player.position.x = nextX;
         player.position.y = nextY;
-        updatePlayerPosition();
-        updateButtonsBasedOnPosition();
+        updatePlayerPosition(); // Update the player's position display and icon
+        updateButtonsBasedOnPosition(); // Update buttons based on the new position
     } else {
         alert("You cannot move there.");
     }
@@ -266,7 +274,7 @@ function isValidPosition(x, y) {
     var apartmentBoundaries = {
         minX: -1,
         maxX: 1,
-        minY: -1,
+        minY: 0,
         maxY: 1
     };
     var hallwayBoundaries = {
@@ -275,6 +283,12 @@ function isValidPosition(x, y) {
         minY: -1,
         maxY: 0
     };
+        // Define boundaries for the map grid
+        var minX = 0;
+        var maxX = gridSize - 1;
+        var minY = 0;
+        var maxY = gridSize - 1;
+    
 
     // Check if the position is within the apartment boundaries
     if (x >= apartmentBoundaries.minX && x <= apartmentBoundaries.maxX &&
@@ -287,6 +301,9 @@ function isValidPosition(x, y) {
         y >= hallwayBoundaries.minY && y <= hallwayBoundaries.maxY) {
         return true;
     }
+
+        // Check if the position is within the map boundaries
+        return x >= minX && x <= maxX && y >= minY && y <= maxY;
 
     return false;
 }
@@ -305,16 +322,21 @@ function updatePositionDisplay() {
     updatePlayerIconPosition();
 }
 
-// Function to handle interactions in the restroom
-function refreshInRestroom() {
-    if (player.mood === "Sleepy") {
-        player.health += 10;
-        player.health = Math.min(player.health, 100);
+function updateMoodAndHealth(action) {
+    switch (action) {
+        case "refreshInRestroom":
+            if (player.mood === "Sleepy") {
+                player.health += 10;
+                player.health = Math.min(player.health, 100);
+            }
+            player.mood = "Awake";
+            alert("Now you're ready for the day!");
+            break;
+        // Add more cases for other actions affecting mood and health
+        default:
+            break;
     }
-    player.mood = "Awake";
     updateStatus();
-    alert("Now you're ready for the day!");
-    updateButtons();
 }
 
 // Function to handle breakfast and drink
@@ -335,6 +357,12 @@ function haveBreakfastAndDrink(food, drink) {
 function acquireWeapon(weaponName) {
     weapons[weaponName].obtained = true;
     updateStatus();
+    updateButtons(); 
+}
+
+function displayWeaponStats(weaponName) {
+    var weapon = weapons[weaponName];
+    alert("Weapon: " + weaponName + "\nDescription: " + weapon.description + "\nWeight: " + weapon.weight);
 }
 
 // Function to use a weapon
@@ -550,6 +578,13 @@ function updateButtons() {
         // Hide the button to acquire the tactical baton if it's hidden
         document.getElementById('acquireTacticalBaton').style.display = 'none';
     }
+    if (weapons["Kitchen Knife"].obtained) {
+        document.getElementById('acquireKitchenKnife').style.display = 'none';
+    }
+    if (weapons["Frying Pan"].obtained) {
+        document.getElementById('acquireFryingPan').style.display = 'none';
+    }
+
 
     // Additional logic to show living room buttons if in the living room
     var livingRoomButtons = document.getElementById('livingRoomButtons');
@@ -614,6 +649,7 @@ function isCellInArea(cell, area) {
 }
 
 
+// Function to update the player's icon position
 function updatePlayerIconPosition() {
     var playerIcon = document.getElementById('playerIcon');
     var cellSize = 50; // Size of each cell in pixels
@@ -626,14 +662,13 @@ function updatePlayerIconPosition() {
     var posX = player.position.x * cellSize + mapRect.left + (cellSize - playerIcon.offsetWidth) / 2;
     var posY = player.position.y * cellSize + mapRect.top + (cellSize - playerIcon.offsetHeight) / 2;
 
-    console.log("Player Position X:", player.position.x);
-    console.log("Player Position Y:", player.position.y);
-    console.log("Player Icon Position X:", posX);
-    console.log("Player Icon Position Y:", posY);
-
-    // Update the position of the player icon
-    playerIcon.style.left = posX + 'px';
-    playerIcon.style.top = posY + 'px';
+    // Check if the calculated position is within the map boundaries
+    if (posX >= mapRect.left && posX + playerIcon.offsetWidth <= mapRect.right &&
+        posY >= mapRect.top && posY + playerIcon.offsetHeight <= mapRect.bottom) {
+        // Update the position of the player icon
+        playerIcon.style.left = posX + 'px';
+        playerIcon.style.top = posY + 'px';
+    }
 }
 
 

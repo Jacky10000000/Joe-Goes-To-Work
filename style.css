@@ -524,12 +524,14 @@ p {
     border: 2px solid black;
     border-radius: 50%;
     position: absolute;
-    width: 40px;
-    height: 40px;
+    width: 2%; /* Adjust the size of the player icon relative to the map container */
+    height: 2%;
     z-index: 1;
     /* Center player icon within the grid cell */
-    top: calc(50% - 20px);
-    left: calc(50% - 20px);
+    /* Adjust top and left positions relative to map container */
+    top: calc(50% - 1%);
+    left: calc(50% - 1%);
+    transition: top 0.5s ease, left 0.5s ease; /* Add transition properties for smooth animation */
 }
 
 .item.apartment {
