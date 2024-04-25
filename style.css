@@ -2,13 +2,6 @@ body {
     background-color: #151035;
 }
 
-.title {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-}
-
 h2 {
     color: white;
 }
@@ -21,6 +14,24 @@ p {
     color: white;
 }
 
+.title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+#saveLoad {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .health {
     display: flex;
     flex-direction: column;
@@ -30,6 +41,7 @@ p {
     display: flex;
     flex-direction: column;
     border: 5.5px solid #FFD37E;
+    width: 15vw;
 }
 
 /* .bar {
@@ -42,7 +54,7 @@ p {
     align-items: center;
     background-color: cyan;
     border: 5px solid black;
-    max-width: 120px;
+    max-width: 100px;
     height: 4vh;
     cursor: pointer;
 }
