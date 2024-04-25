@@ -220,44 +220,53 @@ function updatePlayerPosition() {
     updatePlayerIconPosition(); // Update the player's icon position
 }
 
-// Initial position of the player
-var gridSize = 10;
-var playerPosition = { x: 0, y: 0 }; // Assuming the apartment is represented as a grid
+var gridSize = 10; // Define the size of the grid
 
-// Function to handle movement
+// Function to update position display
+function updatePositionDisplay() {
+    document.getElementById('positionX').textContent = player.position.x;
+    document.getElementById('positionY').textContent = player.position.y;
+}
 
+// Fix the player position update logic in the `move` function
 function move(direction) {
     var nextX = player.position.x;
     var nextY = player.position.y;
 
     switch (direction) {
-        case 'left':
-            nextX--;
-            break;
-        case 'right':
-            nextX++;
-            break;
         case 'up':
             nextY--;
             break;
         case 'down':
             nextY++;
             break;
+        case 'left':
+            nextX--;
+            break;
+        case 'right':
+            nextX++;
+            break;
         default:
             break;
     }
 
-    // Check if the next position is within the map boundaries
+    // Check if the next position is valid
     if (isValidPosition(nextX, nextY)) {
         // Update the player's position
         player.position.x = nextX;
         player.position.y = nextY;
-        updatePlayerPosition(); // Update the player's position display and icon
-        updateButtonsBasedOnPosition(); // Update buttons based on the new position
+
+        // Call the function to update the position display
+        updatePositionDisplay();
+
+        // Call the function to update the player icon position
+        updatePlayerIconPosition();
     } else {
-        alert("You cannot move there.");
+        alert("You can't move in that direction!");
     }
 }
+
+updatePositionDisplay();
 
 document.addEventListener('click', function(event) {
     if (event.target.matches('#livingRoomButtons button')) {
@@ -315,12 +324,6 @@ function isCellInArea(cell, area) {
     return area.some(areaCell => areaCell.x === cell.x && areaCell.y === cell.y);
 }
 
-// Function to update position display
-function updatePositionDisplay() {
-    document.getElementById('positionX').textContent = player.position.x;
-    document.getElementById('positionY').textContent = player.position.y;
-    updatePlayerIconPosition();
-}
 
 function updateMoodAndHealth(action) {
     switch (action) {
@@ -355,9 +358,31 @@ function haveBreakfastAndDrink(food, drink) {
 
 // Function to handle interactions with weapons
 function acquireWeapon(weaponName) {
-    weapons[weaponName].obtained = true;
-    updateStatus();
-    updateButtons(); 
+    if (weapons[weaponName]) {
+        // Check if the weapon has already been obtained
+        if (weapons[weaponName].obtained) {
+            alert("You already have the " + weaponName + ".");
+        } else {
+            // Add the weapon to the player's inventory
+            addItemToInventory(weaponName, 'weapons');
+
+            // Set the obtained property of the weapon to true
+            weapons[weaponName].obtained = true;
+
+            // Hide the button associated with acquiring this weapon
+            var acquireButton = document.getElementById('acquire' + weaponName.replace(/ /g, ''));
+            if (acquireButton) {
+                acquireButton.style.display = 'none';
+            }
+
+            // Update status and buttons display
+            updateStatus();
+            updateButtons();
+            alert("You acquired the " + weaponName + ".");
+        }
+    } else {
+        alert("Weapon not found.");
+    }
 }
 
 function displayWeaponStats(weaponName) {
@@ -412,7 +437,6 @@ function exitApartment() {
     player.position = { x: 2, y: 0 }; // Update player's position to the hallway
 
     // Update UI
-    updateButtonsBasedOnPosition(); // Update buttons after moving
     updatePositionDisplay(); // Update position display
 
     // Prompt the user with the option to look at the newspaper
@@ -433,7 +457,6 @@ function exitApartmentBuilding() {
     player.position = { x: 3, y: 0 };
 
     // Update UI
-    updateButtonsBasedOnPosition(); // Update buttons after moving
     updatePositionDisplay(); // Update position display
 
     // Display a message indicating successful exit
@@ -480,23 +503,23 @@ function makeBreakfast() {
 // Function to update buttons based on player's position
 function updateButtonsBasedOnPosition() {
     var livingRoomButtons = document.getElementById('livingRoomButtons');
-    var bedWindowButtons = document.getElementById('bedWindowButtons');
     var kitchenButtons = document.getElementById('kitchenButtons');
     var restroomButtons = document.getElementById('restroomButtons');
-    var hallwayButtons = document.getElementById('hallwayButtons'); // Add this line
+    var hallwayButtons = document.getElementById('hallwayButtons');
+    var bedWindowButtons = document.getElementById('bedWindowButtons');
 
     // Hide all button containers initially
     livingRoomButtons.style.display = 'none';
-    bedWindowButtons.style.display = 'none';
     kitchenButtons.style.display = 'none';
     restroomButtons.style.display = 'none';
-    hallwayButtons.style.display = 'none'; // Add this line
+    hallwayButtons.style.display = 'none';
+    bedWindowButtons.style.display = 'none';
 
     // Check the player's position and display the corresponding button container
-    if (player.position.x === 1 && player.position.y === 0) {
-        livingRoomButtons.style.display = 'block'; // Show the living room buttons
-    } else if (player.position.x === 0 && player.position.y === 0) {
+    if (player.position.x === 0 && player.position.y === 0) {
         bedWindowButtons.style.display = 'block'; // Show the bed and window buttons
+    } else if (player.position.x === 1 && player.position.y === 0) {
+        livingRoomButtons.style.display = 'block'; // Show the living room buttons
     } else if (player.position.x === 1 && player.position.y === 1) {
         kitchenButtons.style.display = 'block'; // Show the kitchen buttons
     } else if (player.position.x === 1 && player.position.y === -1) {
@@ -509,16 +532,10 @@ function updateButtonsBasedOnPosition() {
 
 
 
+
 // Update status initially
 updateStatus();
-updateButtonsBasedOnPosition();
 
-
-function updatePositionDisplay() {
-    // Update the display of the player's position
-    document.getElementById('positionX').textContent = player.position.x;
-    document.getElementById('positionY').textContent = player.position.y;
-}
 
 // Call updatePositionDisplay initially to display the starting position
 updatePositionDisplay();
@@ -554,7 +571,6 @@ function addButtonBasedOnPosition() {
     }
 }
 
-updatePositionDisplay();
 
 var buttonsDiv = document.getElementById('livingRoomButtons');
 
@@ -565,19 +581,13 @@ if (playerPosition.x === 1 && playerPosition.y === 0) {
 
 
 // Update buttons based on acquired weapons
+
+// Update buttons based on acquired weapons
 function updateButtons() {
     // Update existing button containers as before
 
     // Check if weapons should be shown or hidden based on their states
     var kitchenButtons = document.getElementById('kitchenButtons');
-    if (weapons.snubNose.hidden) {
-        // Hide the button to acquire the snub nose revolver if it's hidden
-        document.getElementById('acquireSnubNose').style.display = 'none';
-    }
-    if (weapons.tacticalBaton.hidden) {
-        // Hide the button to acquire the tactical baton if it's hidden
-        document.getElementById('acquireTacticalBaton').style.display = 'none';
-    }
     if (weapons["Kitchen Knife"].obtained) {
         document.getElementById('acquireKitchenKnife').style.display = 'none';
     }
@@ -585,15 +595,16 @@ function updateButtons() {
         document.getElementById('acquireFryingPan').style.display = 'none';
     }
 
-
     // Additional logic to show living room buttons if in the living room
     var livingRoomButtons = document.getElementById('livingRoomButtons');
-    if (playerPosition.x === 1 && playerPosition.y === 0) {
+    if (player.position.x === 1 && player.position.y === 0) {
         livingRoomButtons.style.display = 'block';
     } else {
         livingRoomButtons.style.display = 'none';
     }
 }
+
+
 
 var customMapAreas = {
     "apartment": [
@@ -658,23 +669,26 @@ function updatePlayerIconPosition() {
     var mapContainer = document.getElementById('mapContainer');
     var mapRect = mapContainer.getBoundingClientRect();
 
-    // Calculate the position of the player icon within the map, considering the map offset
-    var posX = player.position.x * cellSize + mapRect.left + (cellSize - playerIcon.offsetWidth) / 2;
-    var posY = player.position.y * cellSize + mapRect.top + (cellSize - playerIcon.offsetHeight) / 2;
+    // Calculate the position of the player icon within the map
+    // Adjust for negative positions by adding the absolute value of the negative position times the cell size
+    var posX = Math.abs(player.position.x) * cellSize + mapRect.left + (cellSize - playerIcon.offsetWidth) / 2;
+    var posY = Math.abs(player.position.y) * cellSize + mapRect.top + (cellSize - playerIcon.offsetHeight) / 2;
 
-    // Check if the calculated position is within the map boundaries
-    if (posX >= mapRect.left && posX + playerIcon.offsetWidth <= mapRect.right &&
-        posY >= mapRect.top && posY + playerIcon.offsetHeight <= mapRect.bottom) {
-        // Update the position of the player icon
-        playerIcon.style.left = posX + 'px';
-        playerIcon.style.top = posY + 'px';
-    }
+    // Update the position of the player icon
+    playerIcon.style.left = posX + 'px';
+    playerIcon.style.top = posY + 'px';
 }
 
+function updatePositionDisplay() {
+    document.getElementById('positionX').textContent = player.position.x;
+    document.getElementById('positionY').textContent = player.position.y;
+}
 
-updatePlayerIconPosition();
+updateButtonsBasedOnPosition();
+
+updatePositionDisplay();
+
 updateStatus();
 updateButtons();
-updatePositionDisplay();
 generateMap(gridSize, player.position);
 
