@@ -228,7 +228,17 @@ function updatePositionDisplay() {
     document.getElementById('positionY').textContent = player.position.y;
 }
 
-// Fix the player position update logic in the `move` function
+function updatePositionDisplay() {
+    document.getElementById('positionX').textContent = player.position.x;
+    document.getElementById('positionY').textContent = player.position.y;
+}
+
+function updateUIAfterMove() {
+    updateButtonsBasedOnPosition();
+    updatePositionDisplay();
+}
+
+// Function to handle player movement
 function move(direction) {
     var nextX = player.position.x;
     var nextY = player.position.y;
@@ -256,17 +266,15 @@ function move(direction) {
         player.position.x = nextX;
         player.position.y = nextY;
 
-        // Call the function to update the position display
-        updatePositionDisplay();
+        // Call the function to update the UI after moving
+        updateUIAfterMove();
 
-        // Call the function to update the player icon position
+        // Update the player icon position
         updatePlayerIconPosition();
     } else {
         alert("You can't move in that direction!");
     }
 }
-
-updatePositionDisplay();
 
 document.addEventListener('click', function(event) {
     if (event.target.matches('#livingRoomButtons button')) {
@@ -292,12 +300,12 @@ function isValidPosition(x, y) {
         minY: -1,
         maxY: 0
     };
-        // Define boundaries for the map grid
-        var minX = 0;
-        var maxX = gridSize - 1;
-        var minY = 0;
-        var maxY = gridSize - 1;
-    
+
+    // Define boundaries for the map grid
+    var minX = 0;
+    var maxX = gridSize - 1;
+    var minY = 0;
+    var maxY = gridSize - 1;
 
     // Check if the position is within the apartment boundaries
     if (x >= apartmentBoundaries.minX && x <= apartmentBoundaries.maxX &&
@@ -311,11 +319,26 @@ function isValidPosition(x, y) {
         return true;
     }
 
-        // Check if the position is within the map boundaries
-        return x >= minX && x <= maxX && y >= minY && y <= maxY;
-
-    return false;
+    // Check if the position is within the map boundaries
+    return x >= minX && x <= maxX && y >= minY && y <= maxY;
 }
+
+// Event listener for movement buttons
+document.getElementById('moveUp').addEventListener('click', function() {
+    move('up');
+});
+
+document.getElementById('moveDown').addEventListener('click', function() {
+    move('down');
+});
+
+document.getElementById('moveLeft').addEventListener('click', function() {
+    move('left');
+});
+
+document.getElementById('moveRight').addEventListener('click', function() {
+    move('right');
+});
 
 
 
@@ -499,37 +522,34 @@ function makeBreakfast() {
     alert("You prepare yourself a nice hearty breakfast.");
 }
 
-
-// Function to update buttons based on player's position
+// Update buttons based on player's position
 function updateButtonsBasedOnPosition() {
     var livingRoomButtons = document.getElementById('livingRoomButtons');
     var kitchenButtons = document.getElementById('kitchenButtons');
     var restroomButtons = document.getElementById('restroomButtons');
     var hallwayButtons = document.getElementById('hallwayButtons');
-    var bedWindowButtons = document.getElementById('bedWindowButtons');
 
     // Hide all button containers initially
     livingRoomButtons.style.display = 'none';
     kitchenButtons.style.display = 'none';
     restroomButtons.style.display = 'none';
     hallwayButtons.style.display = 'none';
-    bedWindowButtons.style.display = 'none';
 
     // Check the player's position and display the corresponding button container
-    if (player.position.x === 0 && player.position.y === 0) {
-        bedWindowButtons.style.display = 'block'; // Show the bed and window buttons
-    } else if (player.position.x === 1 && player.position.y === 0) {
-        livingRoomButtons.style.display = 'block'; // Show the living room buttons
+    if (player.position.x === 1 && player.position.y === 0) {
+        livingRoomButtons.style.display = 'block';
     } else if (player.position.x === 1 && player.position.y === 1) {
-        kitchenButtons.style.display = 'block'; // Show the kitchen buttons
+        kitchenButtons.style.display = 'block';
     } else if (player.position.x === 1 && player.position.y === -1) {
-        restroomButtons.style.display = 'block'; // Show the restroom buttons
+        restroomButtons.style.display = 'block';
     } else if (player.position.x === 2 && player.position.y === 0) {
-        hallwayButtons.style.display = 'block'; // Show the hallway buttons
+        hallwayButtons.style.display = 'block';
     }
 }
 
 
+updateButtonsBasedOnPosition();
+updateButtons();
 
 
 
@@ -582,7 +602,7 @@ if (playerPosition.x === 1 && playerPosition.y === 0) {
 
 // Update buttons based on acquired weapons
 
-// Update buttons based on acquired weapons
+// Function to update buttons based on acquired weapons and player's location
 function updateButtons() {
     // Update existing button containers as before
 
@@ -660,21 +680,16 @@ function isCellInArea(cell, area) {
 }
 
 
-// Function to update the player's icon position
 function updatePlayerIconPosition() {
     var playerIcon = document.getElementById('playerIcon');
     var cellSize = 50; // Size of each cell in pixels
 
-    // Get the map container and its position relative to the viewport
-    var mapContainer = document.getElementById('mapContainer');
-    var mapRect = mapContainer.getBoundingClientRect();
-
     // Calculate the position of the player icon within the map
-    // Adjust for negative positions by adding the absolute value of the negative position times the cell size
-    var posX = Math.abs(player.position.x) * cellSize + mapRect.left + (cellSize - playerIcon.offsetWidth) / 2;
-    var posY = Math.abs(player.position.y) * cellSize + mapRect.top + (cellSize - playerIcon.offsetHeight) / 2;
+    var posX = player.position.x * cellSize;
+    var posY = player.position.y * cellSize;
 
-    // Update the position of the player icon
+    // Update the position of the player icon with animation
+    playerIcon.style.transition = 'top 0.5s ease, left 0.5s ease';
     playerIcon.style.left = posX + 'px';
     playerIcon.style.top = posY + 'px';
 }
@@ -685,6 +700,7 @@ function updatePositionDisplay() {
 }
 
 updateButtonsBasedOnPosition();
+
 
 updatePositionDisplay();
 
