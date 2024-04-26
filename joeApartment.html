@@ -36,12 +36,18 @@
     </div>
 
     <div id="kitchenButtons" style="display: none;">
-        <button onclick="grabWhiskey()">Grab a Whiskey</button>
-        <button onclick="grabWater()">Grab some Water</button>
-        <button onclick="grabCoffee()">Grab a Coffee</button>
-        <button onclick="makeBreakfast()">Make Breakfast</button>
-        <button onclick="haveBreakfastAndDrink('breakfast', 'whiskey')">Have Breakfast and Whiskey</button>
-        <button onclick="haveBreakfastAndDrink('breakfast', 'water')">Have Breakfast and Water</button>
+        <button onclick="interactKitchenEquipment('stove')">Interact with Stove</button>
+        <button onclick="interactKitchenEquipment('oven')">Interact with Oven</button>
+        <button onclick="interactFoodItem('Bread')">Interact with Bread</button>
+        <button onclick="interactFoodItem('Apple')">Interact with Apple</button>
+        <button onclick="interactFoodItem('Steak')">Interact with Steak</button>
+        <button onclick="interactFoodItem('Water')">Interact with Water</button>
+        <button onclick="interactFoodItem('Eggs')">Interact with Eggs</button>
+        <button onclick="interactFoodItem('Toast')">Interact with Toast</button>
+        <button onclick="interactFoodItem('Sausage')">Interact with Sausage</button>
+        <button onclick="interactFoodItem('Drink')">Interact with Drink</button>
+        <button onclick="interactFoodItem('RawBeef')">Interact with Raw Beef</button>
+        <button onclick="interactFoodItem('RawChicken')">Interact with Raw Chicken</button>
         <button id="acquireKitchenKnife" onclick="acquireWeapon('Kitchen Knife')">Acquire Kitchen Knife</button>
         <button id="acquireFryingPan" onclick="acquireWeapon('Frying Pan')">Acquire Frying Pan</button>
     </div>
@@ -71,10 +77,9 @@
         <button onclick="deleteGamePrompt()">Delete Game</button>
     </div>
 
-    <div id="inventoryPopup">
-        <div class="popup-content">
-            <!-- Inventory content goes here -->
-            <button onclick="showInventory()">Close</button>
+    <div id="inventoryPopup" class="popup">
+        <div class="popup-content" id="inventoryContent">
+            <!-- Inventory items will be populated here dynamically -->
         </div>
     </div>
 

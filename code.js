@@ -7,7 +7,7 @@ var player = {
     equippedWeapon: null,
     inventory: {
         weapons: [],
-        food: [],
+        foodItems: [],
         newspapers: [],
         keys: [],
         miscellaneous: []
@@ -78,6 +78,31 @@ function useItemFromInventory(item, category) {
 function updateStatus() {
     document.getElementById('cash').textContent = player.cash;
     document.getElementById('health').textContent = player.health;
+
+    // Display food items properly
+    var inventoryDisplay = document.getElementById('inventory');
+    inventoryDisplay.innerHTML = ''; // Clear previous content
+    for (var category in player.inventory) {
+        if (player.inventory.hasOwnProperty(category) && player.inventory[category].length > 0) {
+            var categoryHeader = document.createElement('p');
+            categoryHeader.textContent = category.toUpperCase() + ':';
+            inventoryDisplay.appendChild(categoryHeader);
+            var itemList = document.createElement('ul');
+            player.inventory[category].forEach(item => {
+                var listItem = document.createElement('li');
+                if (category === "food") {
+                    // Display food item name and description
+                    listItem.textContent = item + " - " + foodItems[item].description;
+                } else {
+                    // Display other types of items as before
+                    listItem.textContent = item;
+                }
+                itemList.appendChild(listItem);
+            });
+            inventoryDisplay.appendChild(itemList);
+        }
+    }
+
     // Display inventory properly
     var inventoryDisplay = document.getElementById('inventory');
     inventoryDisplay.innerHTML = ''; // Clear previous content
@@ -143,6 +168,47 @@ document.getElementById('useItemButton').addEventListener('click', function () {
 function showInventory() {
     var inventoryPopup = document.getElementById('inventoryPopup');
     inventoryPopup.style.display = inventoryPopup.style.display === 'block' ? 'none' : 'block';
+}
+
+// Function to show the inventory popup
+function showInventoryPopup() {
+    var inventoryPopup = document.getElementById('inventoryPopup');
+    inventoryPopup.style.display = 'block';
+
+    // Call function to populate inventory items
+    populateInventory();
+}
+
+// Function to populate inventory items dynamically
+function populateInventory() {
+    var inventoryContent = document.getElementById('inventoryContent');
+    inventoryContent.innerHTML = ''; // Clear previous content
+
+    // Loop through player's inventory and create HTML elements for each item
+    for (var category in player.inventory) {
+        if (player.inventory.hasOwnProperty(category) && player.inventory[category].length > 0) {
+            var categoryHeader = document.createElement('p');
+            categoryHeader.textContent = category.toUpperCase() + ':';
+            inventoryContent.appendChild(categoryHeader);
+
+            var itemList = document.createElement('ul');
+            player.inventory[category].forEach(item => {
+                var listItem = document.createElement('li');
+                listItem.textContent = getCategoryItemName(item, category);
+                itemList.appendChild(listItem);
+            });
+            inventoryContent.appendChild(itemList);
+        }
+    }
+}
+
+// Function to get the name of the item based on its category
+function getCategoryItemName(item, category) {
+    if (category === "weapons") {
+        return item.name + " - " + item.description;
+    } else {
+        return item;
+    }
 }
 
 // Add event listener to close inventory popup when clicking outside of it
@@ -276,7 +342,7 @@ function move(direction) {
     }
 }
 
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
     if (event.target.matches('#livingRoomButtons button')) {
         var buttonAction = event.target.getAttribute('data-action');
         if (buttonAction) {
@@ -324,19 +390,19 @@ function isValidPosition(x, y) {
 }
 
 // Event listener for movement buttons
-document.getElementById('moveUp').addEventListener('click', function() {
+document.getElementById('moveUp').addEventListener('click', function () {
     move('up');
 });
 
-document.getElementById('moveDown').addEventListener('click', function() {
+document.getElementById('moveDown').addEventListener('click', function () {
     move('down');
 });
 
-document.getElementById('moveLeft').addEventListener('click', function() {
+document.getElementById('moveLeft').addEventListener('click', function () {
     move('left');
 });
 
-document.getElementById('moveRight').addEventListener('click', function() {
+document.getElementById('moveRight').addEventListener('click', function () {
     move('right');
 });
 
@@ -365,20 +431,207 @@ function updateMoodAndHealth(action) {
     updateStatus();
 }
 
-// Function to handle breakfast and drink
-function haveBreakfastAndDrink(food, drink) {
-    if (drink === "whiskey") {
-        player.mood = "Drunk";
-        player.health -= 10;
-    } else {
-        player.mood = "Fluffy";
-        player.health += 10;
+var foodItems = {
+    "Raw": {
+        "Bread": { description: "A loaf of bread", effect: { health: 5, mood: "Content" }, cooked: false },
+        "Apple": { description: "A fresh apple", effect: { health: 3, mood: "Happy" }, cooked: false },
+        "Water": { description: "A glass of water", effect: { health: 2, mood: "Hydrated" }, cooked: false },
+        "Eggs": { description: "A dozen eggs", effect: { health: 7, mood: "Satisfied" }, cooked: false, poisonChance: 0.3 },
+        "RawBeef": { description: "Raw beef", effect: { health: -5, mood: "Uncooked" }, cooked: false },
+        "RawChicken": { description: "Raw chicken", effect: { health: -4, mood: "Uncooked" }, cooked: false }
+    },
+    "Cooked": {
+        "Toast": { description: "A slice of toast", effect: { health: 4, mood: "Warm" }, cooked: true },
+        "Sausage": { description: "A sausage link", effect: { health: 6, mood: "Savory" }, cooked: true },
+        "Steak": { description: "A juicy steak", effect: { health: 10, mood: "Energized" }, cooked: true },
+    },
+    "NonPerishable": {
+        "Drink": { description: "A refreshing beverage", effect: { health: 4, mood: "Rejuvenated" }, cooked: false }
     }
-    player.health = Math.max(0, Math.min(player.health, 100));
+};
+
+// Define variables for buttons relating to food items
+var foodButtons = {
+    "Raw": ["Bread", "Apple", "Steak", "Water", "Eggs", "RawBeef", "RawChicken"],
+    "Cooked": ["Toast", "Sausage", "Steak"],
+    "NonPerishable": ["Drink"]
+};
+
+// Define variables for buttons relating to cooked food items
+var cookedFoodButtons = Object.keys(foodItems["Cooked"]);
+// Function to cook a meal using selected ingredients
+// Function to cook a meal using selected ingredients
+
+function cookMeal(meal) {
+    // Implement logic to cook the meal
+    // Depending on the meal, apply effects and remove ingredients from inventory
+    var ingredients = meals[meal].ingredients;
+    for (var i = 0; i < ingredients.length; i++) {
+        var ingredient = ingredients[i];
+        if (player.inventory.food.includes(ingredient)) {
+            removeItemFromInventory(ingredient, 'food');
+        } else {
+            alert("You need " + ingredient + " to cook " + meal + ".");
+            return;
+        }
+    }
+    // Apply effects of the cooked meal
+    player.health += meals[meal].effect.health;
+    player.mood += meals[meal].effect.mood;
+
+    // Ensure health stays within bounds (0 to 100)
+    player.health = Math.min(player.health, 100);
+
+    // Update status display
     updateStatus();
-    updateButtons();
+
+    // Provide feedback to the player
+    alert("You cooked and consumed " + meal + ".");
 }
 
+function cookFoodItem(foodItem) {
+    // Check if the food item is available in the player's inventory
+    if (player.inventory.food.includes(foodItem)) {
+        // Check if the food item is already cooked
+        if (foodItems[foodItem].cooked) {
+            alert("The " + foodItem + " is already cooked.");
+        } else {
+            // Check if cooking the food item is successful
+            var success = Math.random() > foodItems[foodItem].poisonChance; // Consider poison chance
+
+            if (success) {
+                // Apply effects of cooking the food item
+                foodItems[foodItem].cooked = true;
+                alert("You successfully cooked the " + foodItem + ".");
+
+                // Show cooked food buttons after cooking
+                showCookedFoodButtons();
+
+                // Update status
+                updateStatus();
+            } else {
+                // If cooking fails due to poison, apply negative effects
+                player.health -= 20; // Example: Poison causes health decrease
+                player.mood = "Sick"; // Example: Poison causes negative mood
+                // Ensure health stays within bounds (0 to 100)
+                player.health = Math.max(player.health, 0);
+                alert("Oops! The " + foodItem + " was poisoned. You feel sick.");
+
+                // Update status
+                updateStatus();
+            }
+        }
+    } else {
+        alert("You don't have the " + foodItem + " in your inventory.");
+    }
+}
+
+
+function consumeItem(item, category) {
+    if (category === "food") {
+        if (foodItems[item]) {
+            // Check if the food item is cooked
+            if (foodItems[item].cooked) {
+                // Apply effects on the player's health and mood
+                player.health += foodItems[item].effect.health;
+                player.mood = foodItems[item].effect.mood;
+
+                // Ensure health stays within bounds (0 to 100)
+                player.health = Math.min(player.health, 100);
+
+                // Remove the consumed item from inventory
+                removeItemFromInventory(item, category);
+
+                // Update status
+                updateStatus();
+
+                alert("You consumed " + item + ".");
+            } else {
+                alert("You need to cook the " + item + " first.");
+            }
+        } else {
+            alert("Food item not found.");
+        }
+    } else {
+        // Handle consuming other types of items
+    }
+}
+
+updateStatus();
+
+function interactKitchenEquipment(equipment) {
+    switch (equipment) {
+        case "stove":
+            alert("You turn on the stove.");
+            // Show cooked food buttons after turning on the stove
+            showCookedFoodButtons();
+            break;
+        case "oven":
+            alert("You preheat the oven.");
+            // Show cooked food buttons after preheating the oven
+            showCookedFoodButtons();
+            break;
+        default:
+            break;
+    }
+}
+
+// Function to show cooked food buttons
+function showCookedFoodButtons() {
+    for (var i = 0; i < cookedFoodButtons.length; i++) {
+        var buttonId = cookedFoodButtons[i] + "Button";
+        document.getElementById(buttonId).style.display = "inline-block";
+    }
+}
+
+
+// Function to consume breakfast
+function consumeBreakfast() {
+    // Apply effects of consuming each component
+    for (var component in breakfastComponents) {
+        // Apply effects on player's attributes
+        player.health += breakfastComponents[component].health;
+        player.mood += breakfastComponents[component].mood;
+        // Remove consumed component from inventory
+        removeItemFromInventory(component, "food");
+    }
+    // Update status display
+    updateStatus();
+}
+
+function interactFoodItem(foodItem) {
+    // Add the raw food item to the player's inventory
+    addItemToInventory(foodItem, 'food');
+    alert("You picked up the " + foodItem + ".");
+}
+
+// Function to consume food items from the inventory
+function consumeFoodItem(foodItem) {
+    // Check if the food item is in the player's inventory
+    if (player.inventory.food.includes(foodItem)) {
+        // Check if the food item is cooked
+        if (foodItems[foodItem].cooked) {
+            // Apply effects on the player's health and mood
+            player.health += foodItems[foodItem].effect.health;
+            player.mood = foodItems[foodItem].effect.mood;
+
+            // Ensure health stays within bounds (0 to 100)
+            player.health = Math.min(player.health, 100);
+
+            // Remove the consumed item from inventory
+            removeItemFromInventory(foodItem, 'food');
+
+            // Update status
+            updateStatus();
+
+            alert("You consumed " + foodItem + ".");
+        } else {
+            alert("You need to cook the " + foodItem + " first.");
+        }
+    } else {
+        alert("You don't have the " + foodItem + " in your inventory.");
+    }
+}
 // Function to handle interactions with weapons
 function acquireWeapon(weaponName) {
     if (weapons[weaponName]) {
@@ -430,13 +683,21 @@ function checkWindow() {
 // Function to take a shower
 function takeShower() {
     // Update game state or perform necessary actions
-    alert("You take a refreshing shower.");
+    player.health += 10; // Example: Taking a shower increases health
+    player.mood = "Fresh"; // Taking a shower can change mood to "Fresh"
+    // Ensure health stays within bounds (0 to 100)
+    player.health = Math.min(player.health, 100);
+    updateStatus();
+    updateButtons(); // Update buttons based on the new mood
 }
 
 // Function to brush your teeth
 function brushTeeth() {
     // Update game state or perform necessary actions
-    alert("You brush your teeth and feel fresh.");
+    player.health += 5; // Example: Brushing teeth increases health
+    // Ensure health stays within bounds (0 to 100)
+    player.health = Math.min(player.health, 100);
+    updateStatus();
 }
 
 // Function to enter the kitchen
@@ -498,28 +759,82 @@ function takeDookie() {
     alert("You take a satisfying dookie.");
 }
 
-// Function to grab a whiskey
-function grabWhiskey() {
-    // Update game state or perform necessary actions
-    alert("You grab a bottle of whiskey.");
+// Define the effects of each breakfast component
+var breakfastComponents = {
+    "Eggs": { health: 10, mood: 5 },
+    "Toast": { health: 5, mood: 10 },
+    "Sausage": { health: 15, mood: 5 },
+    "Drink": { health: 5, mood: 5 }
+};
+
+// Function to cook eggs
+function cookEggs() {
+    // Implement cooking logic
+    alert("You cook the eggs.");
+    // Update game state to indicate that eggs are cooked
 }
 
-// Function to grab some water
-function grabWater() {
-    // Update game state or perform necessary actions
-    alert("You grab a glass of water.");
+// Function to cook toast
+function cookToast() {
+    // Implement cooking logic
+    alert("You toast the bread.");
+    // Update game state to indicate that toast is cooked
 }
 
-// Function to grab a coffee
-function grabCoffee() {
-    // Update game state or perform necessary actions
-    alert("You brew a fresh cup of coffee.");
+// Function to cook sausage
+function cookSausage() {
+    // Implement cooking logic
+    alert("You grill the sausage.");
+    // Update game state to indicate that sausage is cooked
 }
 
-// Function to make breakfast
-function makeBreakfast() {
-    // Update game state or perform necessary actions
-    alert("You prepare yourself a nice hearty breakfast.");
+// Function to prepare drink
+function prepareDrink() {
+    // Implement drink preparation logic
+    alert("You pour yourself a drink.");
+    // Update game state to indicate that drink is prepared
+}
+
+// Function to prepare a meal using selected ingredients
+function prepareMeal(ingredients) {
+    // Implement logic to determine the meal based on the combination of ingredients
+    var mealName = determineMeal(ingredients);
+
+    // If a valid meal is prepared
+    if (mealName) {
+        // Apply effects of consuming the prepared meal
+        player.health += meals[mealName].effect.health;
+        player.mood = meals[mealName].effect.mood;
+        alert("You prepared and consumed " + mealName + ".");
+
+        // Ensure health stays within bounds (0 to 100)
+        player.health = Math.min(player.health, 100);
+
+        // Remove the consumed ingredients from inventory
+        ingredients.forEach(ingredient => {
+            removeItemFromInventory(ingredient, 'food');
+        });
+
+        // Update status
+        updateStatus();
+    } else {
+        alert("You can't prepare a meal with the selected ingredients.");
+    }
+}
+
+// Function to determine the meal based on selected ingredients
+function determineMeal(ingredients) {
+    // Convert the ingredients array to a string for easier comparison
+    var ingredientString = ingredients.sort().join(',');
+
+    // Check if the combination of ingredients matches any known meals
+    for (var meal in meals) {
+        if (meals[meal].ingredients.sort().join(',') === ingredientString) {
+            return meal; // Return the name of the matched meal
+        }
+    }
+
+    return null; // Return null if no matching meal is found
 }
 
 // Update buttons based on player's position
@@ -707,4 +1022,6 @@ updatePositionDisplay();
 updateStatus();
 updateButtons();
 generateMap(gridSize, player.position);
+
+
 
