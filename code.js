@@ -7,7 +7,7 @@ var player = {
     equippedWeapon: null,
     inventory: {
         weapons: [],
-        foodItems: [],
+        food: [],
         newspapers: [],
         keys: [],
         miscellaneous: []
@@ -40,6 +40,7 @@ var weapons = {
     // Add more weapons here
 };
 
+// Function to add an item to the player's inventory
 function addItemToInventory(item, category) {
     if (category === "weapons" && weapons[item]) {
         // Add the weapon object instead of just the name
@@ -54,7 +55,7 @@ function addItemToInventory(item, category) {
     updateStatus();
 }
 
-
+// Function to remove an item from the player's inventory
 function removeItemFromInventory(item, category) {
     const index = player.inventory[category].indexOf(item);
     if (index !== -1) {
@@ -62,7 +63,7 @@ function removeItemFromInventory(item, category) {
         updateStatus();
     }
 }
-
+// Function to use an item from the player's inventory
 function useItemFromInventory(item, category) {
     // Implement logic to use the item
     if (category === "weapons") {
@@ -81,30 +82,6 @@ function updateStatus() {
     document.getElementById('cash').textContent = player.cash;
     document.getElementById('health').textContent = player.health;
 
-    // Display food items properly
-    var inventoryDisplay = document.getElementById('inventory');
-    inventoryDisplay.innerHTML = ''; // Clear previous content
-    for (var category in player.inventory) {
-        if (player.inventory.hasOwnProperty(category) && player.inventory[category].length > 0) {
-            var categoryHeader = document.createElement('p');
-            categoryHeader.textContent = category.toUpperCase() + ':';
-            inventoryDisplay.appendChild(categoryHeader);
-            var itemList = document.createElement('ul');
-            player.inventory[category].forEach(item => {
-                var listItem = document.createElement('li');
-                if (category === "food") {
-                    // Display food item name and description
-                    listItem.textContent = item + " - " + foodItems[item].description;
-                } else {
-                    // Display other types of items as before
-                    listItem.textContent = item;
-                }
-                itemList.appendChild(listItem);
-            });
-            inventoryDisplay.appendChild(itemList);
-        }
-    }
-
     // Display inventory properly
     var inventoryDisplay = document.getElementById('inventory');
     inventoryDisplay.innerHTML = ''; // Clear previous content
@@ -119,6 +96,9 @@ function updateStatus() {
                 if (category === "weapons") {
                     // Display weapon name and description
                     listItem.textContent = item.name + " - " + item.description;
+                } else if (category === "food") {
+                    // Display food item name and description
+                    listItem.textContent = item + " - " + foodItems[item].description;
                 } else {
                     // Display other types of items as before
                     listItem.textContent = item;
@@ -132,6 +112,12 @@ function updateStatus() {
     document.getElementById('positionX').textContent = player.position.x;
     document.getElementById('positionY').textContent = player.position.y;
 }
+
+
+// Add event listener to inventory button
+document.getElementById('viewInventoryButton').addEventListener('click', function () {
+    showInventory();
+});
 
 function handleWeaponAction(weaponName, action) {
     if (weapons[weaponName]) {
@@ -166,7 +152,7 @@ document.getElementById('useItemButton').addEventListener('click', function () {
     useItemFromInventory(itemToUse, category);
 });
 
-// Show/hide inventory popup
+// Function to show inventory popup
 function showInventory() {
     var inventoryPopup = document.getElementById('inventoryPopup');
     inventoryPopup.style.display = inventoryPopup.style.display === 'block' ? 'none' : 'block';
@@ -461,11 +447,10 @@ var foodButtons = {
 
 // Define variables for buttons relating to cooked food items
 var cookedFoodButtons = Object.keys(foodItems["Cooked"]);
-// Function to cook a meal using selected ingredients
-// Function to cook a meal using selected ingredients
 
+
+// Function to cook a meal using selected ingredients
 function cookMeal(meal) {
-    // Implement logic to cook the meal
     // Depending on the meal, apply effects and remove ingredients from inventory
     var ingredients = meals[meal].ingredients;
     for (var i = 0; i < ingredients.length; i++) {
@@ -479,7 +464,7 @@ function cookMeal(meal) {
     }
     // Apply effects of the cooked meal
     player.health += meals[meal].effect.health;
-    player.mood += meals[meal].effect.mood;
+    player.mood = meals[meal].effect.mood;
 
     // Ensure health stays within bounds (0 to 100)
     player.health = Math.min(player.health, 100);
@@ -491,42 +476,38 @@ function cookMeal(meal) {
     alert("You cooked and consumed " + meal + ".");
 }
 
-function cookFoodItem(foodItem) {
-    // Check if the food item is available in the player's inventory
-    if (player.inventory.food.includes(foodItem)) {
-        // Check if the food item is already cooked
-        if (foodItems[foodItem].cooked) {
-            alert("The " + foodItem + " is already cooked.");
+// Function to cook food items
+function cookFoodItem() {
+    // Choose a random food item from inventory to cook
+    var randomIndex = Math.floor(Math.random() * player.inventory.food.length);
+    var foodItem = player.inventory.food[randomIndex];
+
+    if (foodItems[foodItem] && !foodItems[foodItem].cooked) {
+        // Implement cooking logic
+        var success = Math.random() > (foodItems[foodItem].poisonChance || 0); // Consider poison chance
+
+        if (success) {
+            // Apply effects of cooking the food item
+            foodItems[foodItem].cooked = true;
+            alert("You successfully cooked the " + foodItem + ".");
         } else {
-            // Check if cooking the food item is successful
-            var success = Math.random() > foodItems[foodItem].poisonChance; // Consider poison chance
-
-            if (success) {
-                // Apply effects of cooking the food item
-                foodItems[foodItem].cooked = true;
-                alert("You successfully cooked the " + foodItem + ".");
-
-                // Show cooked food buttons after cooking
-                showCookedFoodButtons();
-
-                // Update status
-                updateStatus();
-            } else {
-                // If cooking fails due to poison, apply negative effects
-                player.health -= 20; // Example: Poison causes health decrease
-                player.mood = "Sick"; // Example: Poison causes negative mood
-                // Ensure health stays within bounds (0 to 100)
-                player.health = Math.max(player.health, 0);
-                alert("Oops! The " + foodItem + " was poisoned. You feel sick.");
-
-                // Update status
-                updateStatus();
-            }
+            // If cooking fails due to poison, apply negative effects
+            player.health -= 20; // Example: Poison causes health decrease
+            player.mood = "Sick"; // Example: Poison causes negative mood
+            // Ensure health stays within bounds (0 to 100)
+            player.health = Math.max(player.health, 0);
+            alert("Oops! The " + foodItem + " was poisoned. You feel sick.");
         }
     } else {
-        alert("You don't have the " + foodItem + " in your inventory.");
+        alert("No raw food available to cook.");
     }
+
+    // Update status
+    updateStatus();
 }
+
+// Initialize status display
+updateStatus();
 
 
 function consumeItem(item, category) {
@@ -561,22 +542,28 @@ function consumeItem(item, category) {
 
 updateStatus();
 
+// Function to interact with kitchen equipment
 function interactKitchenEquipment(equipment) {
     switch (equipment) {
         case "stove":
-            alert("You turn on the stove.");
-            // Show cooked food buttons after turning on the stove
-            showCookedFoodButtons();
+            if (player.inventory.food.length > 0) {
+                cookFoodItem(); // Cook available food items
+            } else {
+                alert("You have no food to cook.");
+            }
             break;
         case "oven":
-            alert("You preheat the oven.");
-            // Show cooked food buttons after preheating the oven
-            showCookedFoodButtons();
+            if (player.inventory.food.length > 0) {
+                cookFoodItem(); // Cook available food items
+            } else {
+                alert("You have no food to cook.");
+            }
             break;
         default:
             break;
     }
 }
+
 
 // Function to show cooked food buttons
 function showCookedFoodButtons() {
@@ -601,6 +588,7 @@ function consumeBreakfast() {
     updateStatus();
 }
 
+// Function to interact with food items
 function interactFoodItem(foodItem) {
     if (foodItems["Raw"][foodItem]) {
         addItemToInventory(foodItem, 'food'); // Add the item to inventory
@@ -643,7 +631,7 @@ function consumeFoodItem(foodItem) {
         alert("You don't have the " + foodItem + " in your inventory.");
     }
 }
-// Function to handle interactions with weapons
+// Function to acquire a weapon
 function acquireWeapon(weaponName) {
     if (weapons[weaponName]) {
         // Check if the weapon has already been obtained
@@ -1033,6 +1021,3 @@ updatePositionDisplay();
 updateStatus();
 updateButtons();
 generateMap(gridSize, player.position);
-
-
-

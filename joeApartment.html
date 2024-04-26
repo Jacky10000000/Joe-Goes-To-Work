@@ -35,7 +35,7 @@
         <button onclick="exitApartment()">Exit Apartment</button>
     </div>
 
-    <div id="kitchenButtons" style="display: none;">
+    <div id="kitchenButtons" style="display: block;">
         <button onclick="interactKitchenEquipment('stove')">Interact with Stove</button>
         <button onclick="interactKitchenEquipment('oven')">Interact with Oven</button>
         <button onclick="interactFoodItem('Bread')">Interact with Bread</button>
@@ -53,11 +53,10 @@
     </div>
 
     <!-- New HTML for cooking section -->
-<section id="cookingSection" style="display: none;">
-    <h2>Cooking Section</h2>
-    <button onclick="showCookedFoodButtons()">Show Cooked Food Options</button>
-    <button onclick="showInventoryPopup()">Show Inventory</button>
-</section>
+    <section id="cookingSection" style="display: none;">
+        <h2>Cooking Section</h2>
+        <button onclick="toggleCookingSection()">Hide Cooking Section</button>
+    </section>
 
     <div id="hallwayButtons" style="display: none;">
         <button onclick="exitApartmentBuilding()">Exit Apartment Building</button>
