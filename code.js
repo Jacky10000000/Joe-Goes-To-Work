@@ -40,11 +40,13 @@ var weapons = {
     // Add more weapons here
 };
 
-// Function to add an item to the inventory
 function addItemToInventory(item, category) {
     if (category === "weapons" && weapons[item]) {
         // Add the weapon object instead of just the name
         player.inventory[category].push(weapons[item]);
+    } else if (category === "food" && foodItems["Raw"][item]) {
+        // Add the food item object
+        player.inventory[category].push(foodItems["Raw"][item]);
     } else {
         // Add other types of items as before
         player.inventory[category].push(item);
@@ -600,9 +602,18 @@ function consumeBreakfast() {
 }
 
 function interactFoodItem(foodItem) {
-    // Add the raw food item to the player's inventory
-    addItemToInventory(foodItem, 'food');
-    alert("You picked up the " + foodItem + ".");
+    if (foodItems["Raw"][foodItem]) {
+        addItemToInventory(foodItem, 'food'); // Add the item to inventory
+        alert("You picked up the " + foodItem + ".");
+    } else {
+        alert("This food item doesn't exist.");
+    }
+}
+
+// Function to show/hide the cooking section
+function toggleCookingSection() {
+    var cookingSection = document.getElementById('cookingSection');
+    cookingSection.style.display = cookingSection.style.display === 'block' ? 'none' : 'block';
 }
 
 // Function to consume food items from the inventory
