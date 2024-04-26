@@ -2,16 +2,20 @@ body {
     background-color: #151035;
 }
 
-h2 {
-    color: white;
-}
-
-h3 {
+h1 {
     color: white;
 }
 
 p {
     color: white;
+}
+
+h3 {
+    display: flex;
+    justify-content: center;
+    color: white;
+    border: 5.5px solid white;
+    border-radius: 10px;
 }
 
 .title {
@@ -63,7 +67,10 @@ p {
     display: flex;
     color: white;
     border: 3px solid #FFD37E;
+    width: auto;
     border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 #saveLoad {
