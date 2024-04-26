@@ -40,29 +40,30 @@ var weapons = {
     // Add more weapons here
 };
 
-// Function to add an item to the player's inventory
-function addItemToInventory(item, category) {
-    if (category === "weapons" && weapons[item]) {
-        // Add the weapon object instead of just the name
-        player.inventory[category].push(weapons[item]);
-    } else if (category === "food" && foodItems["Raw"][item]) {
-        // Add the food item object
-        player.inventory[category].push(foodItems["Raw"][item]);
-    } else {
-        // Add other types of items as before
-        player.inventory[category].push(item);
-    }
-    updateStatus();
-}
+        // Function to add an item to the player's inventory
+        function addItemToInventory(item, category) {
+            if (player.inventory.hasOwnProperty(category)) {
+                player.inventory[category].push(item);
+                updateStatus();
+            } else {
+                alert("Invalid category.");
+            }
+        }
 
-// Function to remove an item from the player's inventory
-function removeItemFromInventory(item, category) {
-    const index = player.inventory[category].indexOf(item);
-    if (index !== -1) {
-        player.inventory[category].splice(index, 1);
-        updateStatus();
-    }
-}
+        // Function to remove an item from the player's inventory
+        function removeItemFromInventory(item, category) {
+            if (player.inventory.hasOwnProperty(category)) {
+                var index = player.inventory[category].indexOf(item);
+                if (index !== -1) {
+                    player.inventory[category].splice(index, 1);
+                    updateStatus();
+                } else {
+                    alert("Item not found in inventory.");
+                }
+            } else {
+                alert("Invalid category.");
+            }
+        }
 // Function to use an item from the player's inventory
 function useItemFromInventory(item, category) {
     // Implement logic to use the item
@@ -77,41 +78,32 @@ function useItemFromInventory(item, category) {
 }
 
 
-// Function to update status display
-function updateStatus() {
-    document.getElementById('cash').textContent = player.cash;
-    document.getElementById('health').textContent = player.health;
+        // Function to update status display
+        function updateStatus() {
+            document.getElementById('cash').textContent = player.cash;
+            document.getElementById('health').textContent = player.health;
+            document.getElementById('mood').textContent = player.mood;
+            document.getElementById('positionX').textContent = player.position.x;
+            document.getElementById('positionY').textContent = player.position.y;
 
-    // Display inventory properly
-    var inventoryDisplay = document.getElementById('inventory');
-    inventoryDisplay.innerHTML = ''; // Clear previous content
-    for (var category in player.inventory) {
-        if (player.inventory.hasOwnProperty(category) && player.inventory[category].length > 0) {
-            var categoryHeader = document.createElement('p');
-            categoryHeader.textContent = category.toUpperCase() + ':';
-            inventoryDisplay.appendChild(categoryHeader);
-            var itemList = document.createElement('ul');
-            player.inventory[category].forEach(item => {
-                var listItem = document.createElement('li');
-                if (category === "weapons") {
-                    // Display weapon name and description
-                    listItem.textContent = item.name + " - " + item.description;
-                } else if (category === "food") {
-                    // Display food item name and description
-                    listItem.textContent = item + " - " + foodItems[item].description;
-                } else {
-                    // Display other types of items as before
-                    listItem.textContent = item;
+            // Display inventory properly
+            var inventoryDisplay = document.getElementById('inventory');
+            inventoryDisplay.innerHTML = ''; // Clear previous content
+            for (var category in player.inventory) {
+                if (player.inventory.hasOwnProperty(category) && player.inventory[category].length > 0) {
+                    var categoryHeader = document.createElement('p');
+                    categoryHeader.textContent = category.toUpperCase() + ':';
+                    inventoryDisplay.appendChild(categoryHeader);
+                    var itemList = document.createElement('ul');
+                    player.inventory[category].forEach(item => {
+                        var listItem = document.createElement('li');
+                        listItem.textContent = item;
+                        itemList.appendChild(listItem);
+                    });
+                    inventoryDisplay.appendChild(itemList);
                 }
-                itemList.appendChild(listItem);
-            });
-            inventoryDisplay.appendChild(itemList);
+            }
         }
-    }
-    document.getElementById('mood').textContent = player.mood;
-    document.getElementById('positionX').textContent = player.position.x;
-    document.getElementById('positionY').textContent = player.position.y;
-}
 
 
 // Add event listener to inventory button
@@ -156,6 +148,7 @@ document.getElementById('useItemButton').addEventListener('click', function () {
 function showInventory() {
     var inventoryPopup = document.getElementById('inventoryPopup');
     inventoryPopup.style.display = inventoryPopup.style.display === 'block' ? 'none' : 'block';
+    populateInventory(); // Populate inventory when showing
 }
 
 // Function to show the inventory popup
@@ -167,28 +160,31 @@ function showInventoryPopup() {
     populateInventory();
 }
 
-// Function to populate inventory items dynamically
-function populateInventory() {
-    var inventoryContent = document.getElementById('inventoryContent');
-    inventoryContent.innerHTML = ''; // Clear previous content
+    // Function to populate inventory items dynamically
+    function populateInventory() {
+        var inventoryContent = document.getElementById('inventoryContent');
+        inventoryContent.innerHTML = ''; // Clear previous content
 
-    // Loop through player's inventory and create HTML elements for each item
-    for (var category in player.inventory) {
-        if (player.inventory.hasOwnProperty(category) && player.inventory[category].length > 0) {
-            var categoryHeader = document.createElement('p');
-            categoryHeader.textContent = category.toUpperCase() + ':';
-            inventoryContent.appendChild(categoryHeader);
+        // Loop through player's inventory and create HTML elements for each item
+        for (var category in player.inventory) {
+            if (player.inventory.hasOwnProperty(category) && player.inventory[category].length > 0) {
+                var categoryHeader = document.createElement('p');
+                categoryHeader.textContent = category.toUpperCase() + ':';
+                inventoryContent.appendChild(categoryHeader);
 
-            var itemList = document.createElement('ul');
-            player.inventory[category].forEach(item => {
-                var listItem = document.createElement('li');
-                listItem.textContent = getCategoryItemName(item, category);
-                itemList.appendChild(listItem);
-            });
-            inventoryContent.appendChild(itemList);
+                var itemList = document.createElement('ul');
+                player.inventory[category].forEach(item => {
+                    var listItem = document.createElement('li');
+                    listItem.textContent = item;
+                    itemList.appendChild(listItem);
+                });
+                inventoryContent.appendChild(itemList);
+            }
         }
     }
-}
+
+    // Initialize status display
+    updateStatus();
 
 // Function to get the name of the item based on its category
 function getCategoryItemName(item, category) {
@@ -476,35 +472,18 @@ function cookMeal(meal) {
     alert("You cooked and consumed " + meal + ".");
 }
 
-// Function to cook food items
-function cookFoodItem() {
-    // Choose a random food item from inventory to cook
-    var randomIndex = Math.floor(Math.random() * player.inventory.food.length);
-    var foodItem = player.inventory.food[randomIndex];
-
-    if (foodItems[foodItem] && !foodItems[foodItem].cooked) {
-        // Implement cooking logic
-        var success = Math.random() > (foodItems[foodItem].poisonChance || 0); // Consider poison chance
-
-        if (success) {
-            // Apply effects of cooking the food item
-            foodItems[foodItem].cooked = true;
-            alert("You successfully cooked the " + foodItem + ".");
-        } else {
-            // If cooking fails due to poison, apply negative effects
-            player.health -= 20; // Example: Poison causes health decrease
-            player.mood = "Sick"; // Example: Poison causes negative mood
-            // Ensure health stays within bounds (0 to 100)
-            player.health = Math.max(player.health, 0);
-            alert("Oops! The " + foodItem + " was poisoned. You feel sick.");
+        // Function to cook food items
+        function cookFoodItem() {
+            // Implement logic for cooking food items
+            // For simplicity, let's assume all raw food becomes cooked
+            var cookedFood = [];
+            player.inventory.food.forEach(function (foodItem) {
+                cookedFood.push("Cooked " + foodItem);
+            });
+            player.inventory.food = cookedFood;
+            updateStatus();
+            alert("You cooked the food.");
         }
-    } else {
-        alert("No raw food available to cook.");
-    }
-
-    // Update status
-    updateStatus();
-}
 
 // Initialize status display
 updateStatus();
@@ -542,27 +521,28 @@ function consumeItem(item, category) {
 
 updateStatus();
 
-// Function to interact with kitchen equipment
-function interactKitchenEquipment(equipment) {
-    switch (equipment) {
-        case "stove":
-            if (player.inventory.food.length > 0) {
-                cookFoodItem(); // Cook available food items
-            } else {
-                alert("You have no food to cook.");
+        // Function to interact with kitchen equipment
+        function interactKitchenEquipment(equipment) {
+            // Implement logic for interacting with kitchen equipment
+            switch (equipment) {
+                case "stove":
+                    if (player.inventory.food.length > 0) {
+                        cookFoodItem(); // Cook available food items
+                    } else {
+                        alert("You have no food to cook.");
+                    }
+                    break;
+                case "oven":
+                    if (player.inventory.food.length > 0) {
+                        cookFoodItem(); // Cook available food items
+                    } else {
+                        alert("You have no food to cook.");
+                    }
+                    break;
+                default:
+                    break;
             }
-            break;
-        case "oven":
-            if (player.inventory.food.length > 0) {
-                cookFoodItem(); // Cook available food items
-            } else {
-                alert("You have no food to cook.");
-            }
-            break;
-        default:
-            break;
-    }
-}
+        }
 
 
 // Function to show cooked food buttons
@@ -588,15 +568,11 @@ function consumeBreakfast() {
     updateStatus();
 }
 
-// Function to interact with food items
-function interactFoodItem(foodItem) {
-    if (foodItems["Raw"][foodItem]) {
-        addItemToInventory(foodItem, 'food'); // Add the item to inventory
-        alert("You picked up the " + foodItem + ".");
-    } else {
-        alert("This food item doesn't exist.");
-    }
-}
+        // Function to interact with food items
+        function interactFoodItem(foodItem) {
+            addItemToInventory(foodItem, 'food'); // Add the item to inventory
+            alert("You picked up the " + foodItem + ".");
+        }
 
 // Function to show/hide the cooking section
 function toggleCookingSection() {
@@ -929,6 +905,13 @@ function updateButtons() {
         document.getElementById('acquireFryingPan').style.display = 'none';
     }
 
+    // Additional logic to show kitchen buttons only if in the kitchen
+    if (player.position.x === 1 && player.position.y === 1) {
+        kitchenButtons.style.display = 'block';
+    } else {
+        kitchenButtons.style.display = 'none';
+    }
+
     // Additional logic to show living room buttons if in the living room
     var livingRoomButtons = document.getElementById('livingRoomButtons');
     if (player.position.x === 1 && player.position.y === 0) {
@@ -937,7 +920,6 @@ function updateButtons() {
         livingRoomButtons.style.display = 'none';
     }
 }
-
 
 
 var customMapAreas = {
