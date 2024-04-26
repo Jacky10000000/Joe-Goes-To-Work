@@ -52,11 +52,36 @@ p {
 .view_inventory {
     display: flex;
     align-items: center;
-    background-color: cyan;
+    background-color: #FFD37E;
     border: 5px solid black;
     max-width: 100px;
     height: 4vh;
     cursor: pointer;
+}
+
+.saveBtn {
+    display: flex;
+    color: white;
+    border: 3px solid #FFD37E;
+    border-radius: 10px;
+}
+
+#saveLoad {
+    display: flex;
+}
+
+#saveG {
+    display: flex;
+    width: 10%;
+}
+
+#loadG {
+    display: flex;
+    width: 10%;
+}
+
+#deleteG {
+    display: flex;
 }
 
 
@@ -65,7 +90,6 @@ p {
     align-items: center;
     justify-content: space-around;
 }
-
 
 .arrow_keys {
     display: flex;
